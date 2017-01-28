@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 class Vehicle
 {
 
@@ -52,9 +53,6 @@ public:
 	int 	cityMPG();
 	int 	highwayMPG();
 	double 	currentFuel();
-	RoadType roadType();
-
-	void setRoadType(RoadType roadType);
 
 
 // MEMBER FUNCTIONS ============================================================
@@ -64,7 +62,7 @@ public:
 //		Preconditions: Entered miles is greater than 0
 //		Postconditions: None
 //		Returns: Gallons of fuel consumed after the specified number of miles.
-	double calcFuelConsumed(double miles);
+	double calcFuelConsumed(double miles, RoadType roadType);
 
 
 //==============================================================================
@@ -73,7 +71,7 @@ public:
 //	Reduces the current fuel in tank according to the miles travelled
 //		Preconditions: Entered miles is greater than 0
 //		Postconditions: None
-	void consumeFuel(double miles);
+	void consumeFuel(double miles, RoadType roadType);
 };
 
 

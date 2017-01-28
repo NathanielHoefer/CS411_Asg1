@@ -68,21 +68,13 @@ int Vehicle::highwayMPG() 		{ return mHighwayMPG; }
 
 double Vehicle::currentFuel() 	{ return mCurrentFuel; }
 
-RoadType Vehicle::roadType() 	{ return mRoadType; }
-
-
-//==============================================================================
-
-
-void Vehicle::setRoadType(RoadType roadType) { mRoadType = roadType; }
-
 
 //==============================================================================
 // MEMBER FUNCTIONS
 //==============================================================================
 
 
-double Vehicle::calcFuelConsumed(double miles)
+double Vehicle::calcFuelConsumed(double miles, RoadType roadType)
 {
 	//TODO Calculate fuel consumed
 
@@ -92,7 +84,7 @@ double Vehicle::calcFuelConsumed(double miles)
 //==============================================================================
 
 
-void Vehicle::consumeFuel(double miles)
+void Vehicle::consumeFuel(double miles, RoadType roadType)
 {
 
 	if (mRoadType == CITY) {
