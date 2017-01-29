@@ -34,7 +34,7 @@ Vehicle::Vehicle()
 //==============================================================================
 
 
-Vehicle::Vehicle(String make, String model, double engine, int cylinders,
+Vehicle::Vehicle(string make, string model, double engine, int cylinders,
 			double tankSize, int cityMPG, int highwayMPG)
 {
 	mMake = make;
@@ -44,7 +44,7 @@ Vehicle::Vehicle(String make, String model, double engine, int cylinders,
 	mTankSize = tankSize;
 	mCityMPG = cityMPG;
 	mHighwayMPG = highwayMPG;
-	mCurrentFuel = 0;
+	mCurrentFuel = tankSize;
 	mRoadType = DEFAULT;
 }
 
@@ -54,9 +54,11 @@ Vehicle::Vehicle(String make, String model, double engine, int cylinders,
 //==============================================================================
 
 
-String Vehicle::make() 			{ return mMake; }
+string Vehicle::make() 			{ return mMake; }
 
-String Vehicle::engine() 		{ return mEngine; }
+string Vehicle::model()			{ return mModel; }
+
+double Vehicle::engine() 		{ return mEngine; }
 
 int Vehicle::cylinderCount()	{ return mCylinderCnt; }
 

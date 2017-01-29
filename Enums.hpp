@@ -8,12 +8,30 @@
 #ifndef SRC_ENUMS_HPP_
 #define SRC_ENUMS_HPP_
 
+#include "Vehicle.hpp"
+#include "TripLeg.hpp"
+#include <vector>
+
 
 enum RoadType
 {
 		HIGHWAY,
 		CITY,
 		DEFAULT
+};
+
+
+struct Parameters
+{
+	vector<TripLeg> tripLegs;
+	Vehicle vehicle;
+	int cityMPH;
+	int highwayMPH;
+	double fuelPrice;
+	int refuelTime;
+	int restroomTime;
+	int napTime;
+	int awakeTime;
 };
 
 

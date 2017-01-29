@@ -10,7 +10,8 @@
 #ifndef SRC_VEHICLE_HPP_
 #define SRC_VEHICLE_HPP_
 
-#include "Enums.hpp"s
+#include <string>
+#include "Enums.hpp"
 
 using namespace std;
 
@@ -22,8 +23,9 @@ private:
 
 // MEMBER VARIABLES ============================================================
 
-	String mMake;
-	String mModel;
+
+	string mMake;
+	string mModel;
 	double mEngine;
 	int mCylinderCnt;
 	double mTankSize;
@@ -32,21 +34,23 @@ private:
 	double mCurrentFuel;
 	RoadType mRoadType;
 
+
 public:
 
 // CONSTRUCTORS ================================================================
 
+
 	Vehicle();
 
-	Vehicle(String make, String model, double engine, int cylinders,
+	Vehicle(string make, string model, double engine, int cylinders,
 			double tankSize, int cityMPG, int highwayMPG);
 
 
 // ACCESSORS / MUTATORS ========================================================
 
 
-	String 	make();
-	String 	model();
+	string 	make();
+	string 	model();
 	double 	engine();
 	int 	cylinderCount();
 	double 	tankSize();
