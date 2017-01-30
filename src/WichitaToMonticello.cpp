@@ -24,8 +24,10 @@ WichitaToMonticello::WichitaToMonticello(Parameters parms)
 	mRefuelTime = parms.refuelTime;
 	mFuelPrice = parms.fuelPrice;
 	mRestroomTime = parms.restroomTime;
-	mNapTime = parms.napTime;
+	mSleepTime = parms.napTime;
 	mAwakeTime = parms.awakeTime;
+	mCityMPH = parms.cityMPH;
+	mHighwayMPH = parms.highwayMPH;
 
 	mFuelPurchased = 0.0;
 	mFuelConsumed = 0.0;
@@ -126,4 +128,86 @@ void WichitaToMonticello::runTrip()
 //==============================================================================
 
 
-	// TODO Create all of the calculating functions
+int WichitaToMonticello::calcDriveTime(double miles, RoadType roadType)
+{
+	int mph;
+
+	if (roadType == CITY) {
+		mph = mCityMPH;
+	} else if (roadType == HIGHWAY) {
+		mph = mHighwayMPH;
+	}
+
+	return (miles / mph) * 60;
+}
+
+
+//==============================================================================
+
+
+int WichitaToMonticello::calcRefuelTime()
+{
+	return mGStationCnt * mRefuelTime;
+}
+
+
+//==============================================================================
+
+
+int WichitaToMonticello::calcRestroomTime()
+{
+	return mGStationCnt * mRestroomTime;
+}
+
+
+//==============================================================================
+
+
+int WichitaToMonticello::calcSleepTime()
+{
+	int numOfNaps;
+
+	// Checks to see if arrival is exactly at nap time
+	if ((mTravelTime / mAwakeTime) % mSleepTime == 0) {
+		numOfNaps = (mTravelTime / mAwakeTime) - 1;
+	} else {
+		numOfNaps = (mTravelTime / mAwakeTime);
+	}
+
+	return numOfNaps * mSleepTime;
+}
+
+
+//==============================================================================
+
+
+double WichitaToMonticello::calcGasCost()
+{
+	return mFuelPurchased * mFuelPrice;
+}
+
+
+//==============================================================================
+
+
+void WichitaToMonticello::increaseFuelConsumed(double miles, RoadType roadType)
+{
+	int mpg;
+
+	if (roadType == CITY) {
+		mpg = mVehicle.cityMPG();
+	} else if (roadType == HIGHWAY) {
+		mpg = mVehicle.highwayMPG();
+	}
+
+	mFuelConsumed += miles / mpg;
+}
+
+
+//==============================================================================
+
+
+void WichitaToMonticello::increaseFuelPurchased()
+{
+	mFuelPurchased += mVehicle.tankSize() - mVehicle.currentFuel();
+}
