@@ -33,7 +33,8 @@ private:
 	double mFuelConsumed;
 	double mCityMiles;
 	double mHighwayMiles;
-	int mTravelTime;
+	int mDriveTime;
+	int mTripTime;
 	int mGStationCnt;
 
 
@@ -48,12 +49,12 @@ public:
 // ACCESSORS / MUTATORS ========================================================
 
 
-	Vehicle vehicle();
-	double fuelPurchased();
-	double fuelConsumed();
-	double cityMiles();
-	double highwayMiles();
-	int travelTime();
+	Vehicle getVehicle();
+	double getFuelPurchased();
+	double getFuelConsumed();
+	double getCityMiles();
+	double getHighwayMiles();
+	int getDriveTime();
 	int gStationCount();
 
 
@@ -64,7 +65,16 @@ public:
 // 		total fuel used, time taken, amount spent on gas, and number of miles
 //		Preconditions: None
 //		Postconditions: Member variables are updated per calculations
-	void runTrip();
+	void runTrip(vector<TripLeg> &legs);
+
+
+//==============================================================================
+
+
+//	Print the trip details per assignment
+//		Preconditions: None
+//		Postconditions: None
+	void printTripDetails();
 
 
 //==============================================================================
@@ -113,11 +123,12 @@ private:
 //==============================================================================
 
 
-//	Calculates the total cost of gas on the trip
+//	Calculates the total cost of gas on the trip taking into consideration of
+// 		fuel added or fuel used
 //		Preconditions: None
 //		Postconditions: None
 //		Returns: The dollar value of gas purchased
-	double calcGasCost();
+	double calcGasCost(bool isFuelAdded);
 
 //==============================================================================
 

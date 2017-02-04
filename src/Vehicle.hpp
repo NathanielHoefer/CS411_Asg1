@@ -75,6 +75,25 @@ public:
 //		Preconditions: Gallons must be <= to fuel left in tank
 //		Postconditions: Current fuel is reduced by gallons entered
 	void consumeFuel(double gallons);
+
+
+//==============================================================================
+
+
+//	Returns the MPG based on the roadtype entered
+//		Preconditions: None
+//		Postconditions: None
+//		Returns: MPG in gallons
+	int getMPG(TripLeg::RoadType type);
+
+
+//==============================================================================
+
+
+//	Fills the tank to full
+//		Preconditions: None
+//		Postconditions: None
+	void fillTank();
 };
 
 

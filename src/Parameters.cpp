@@ -22,10 +22,12 @@ Parameters::Parameters()
 	mRestroomTime = 0;
 	mNapTime = 0;
 	mAwakeTime = 0;
+	mGasDistance = 0;
 }
 
 Parameters::Parameters(int cityMPH, int highwayMPH, double fuelPrice,
-			int refuelTime, int restroomTime, int napTime, int awakeTime)
+			int refuelTime, int restroomTime, int napTime, int awakeTime,
+			double gasDistance)
 {
 	mCityMPH = cityMPH;
 	mHighwayMPH = highwayMPH;
@@ -34,6 +36,7 @@ Parameters::Parameters(int cityMPH, int highwayMPH, double fuelPrice,
 	mRestroomTime = restroomTime;
 	mNapTime = napTime;
 	mAwakeTime = awakeTime;
+	mGasDistance = gasDistance;
 }
 
 
@@ -68,4 +71,10 @@ int Parameters::getRestroomTime() const { return mRestroomTime; }
 
 void Parameters::setRestroomTime(int restroomTime) {
 	mRestroomTime = restroomTime;
+}
+
+double Parameters::getGasDistance() const { return mGasDistance; }
+
+void Parameters::setGasDistance(double gastDistance) {
+	mGasDistance = gastDistance;
 }

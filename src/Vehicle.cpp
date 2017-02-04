@@ -98,3 +98,28 @@ void Vehicle::consumeFuel(double gallons)
 		mCurrentFuel -= gallons;
 	}
 }
+
+
+//==============================================================================
+
+
+int Vehicle::getMPG(TripLeg::RoadType type)
+{
+	int mpg = -1;
+	if (type == TripLeg::CITY) {
+		mpg = mCityMPG;
+	} else if (type == TripLeg::HIGHWAY) {
+		mpg = mHighwayMPG;
+	}
+
+	return mpg;
+}
+
+
+//==============================================================================
+
+
+void Vehicle::fillTank()
+{
+	mCurrentFuel = mTankSize;
+}

@@ -23,10 +23,11 @@ private:
 	int mCityMPH;
 	int mHighwayMPH;
 	double mFuelPrice;
-	int mRefuelTime;
-	int mRestroomTime;
-	int mNapTime;
-	int mAwakeTime;
+	int mRefuelTime;		// in minutes
+	int mRestroomTime;		// in minutes
+	int mNapTime;			// in minutes
+	int mAwakeTime;			// in minutes
+	double mGasDistance;	// in miles
 
 
 public:
@@ -37,7 +38,8 @@ public:
 	Parameters();
 
 	Parameters(int cityMPH, int highwayMPH, double fuelPrice,
-				int refuelTime, int restroomTime, int napTime, int awakeTime);
+				int refuelTime, int restroomTime, int napTime, int awakeTime,
+				double gasDistance);
 
 
 // ACCESSORS / MUTATORS ========================================================
@@ -69,6 +71,10 @@ public:
 	int getRestroomTime() const;
 
 	void setRestroomTime(int restroomTime);
+
+	double getGasDistance() const;
+
+	void setGasDistance(double gastDistance);
 };
 
 
