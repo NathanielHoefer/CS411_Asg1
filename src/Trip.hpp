@@ -1,5 +1,5 @@
 //==============================================================================
-// Assignment 1 - WichitaToMonticello Class
+// Assignment 1 - Trip Class
 //==============================================================================
 /*
     Author: Nathaniel Hoefer
@@ -7,18 +7,18 @@
 
 ******************************************************************************/
 
-#ifndef WICHITATOMONTICELLO_HPP_
-#define WICHITATOMONTICELLO_HPP_
+#ifndef TRIP_HPP_
+#define TRIP_HPP_
 
 #include "TripLeg.hpp"
 #include "Vehicle.hpp"
-#include "Enums.hpp"
+#include "Parameters.hpp"
 #include <vector>
 
 using namespace std;
 
 
-class WichitaToMonticello
+class Trip
 {
 
 private:
@@ -27,18 +27,8 @@ private:
 // MEMBER VARIABLES ============================================================
 
 
-	// Parameter Variables
-	vector<TripLeg> mTripLegs;
+	Parameters mParms;
 	Vehicle mVehicle;
-	double mFuelPrice;
-	int mRefuelTime;
-	int mRestroomTime;
-	int mSleepTime;
-	int mAwakeTime;
-	int mCityMPH;
-	int mHighwayMPH;
-
-	// Recording Variables
 	double mFuelPurchased;
 	double mFuelConsumed;
 	double mCityMiles;
@@ -52,7 +42,7 @@ public:
 // CONSTRUCTORS ================================================================
 
 
-	WichitaToMonticello(Parameters parms);
+	Trip(Vehicle &vehicle, Parameters &parms);
 
 
 // ACCESSORS / MUTATORS ========================================================
@@ -85,7 +75,7 @@ private:
 //		Preconditions: Road type either City or Highway
 //		Postconditions: None
 //		Returns: The minutes taken to drive the amount of miles
-	int calcDriveTime(double miles, RoadType roadType);
+	int calcDriveTime(double miles, TripLeg::RoadType roadType);
 
 
 //==============================================================================
@@ -135,7 +125,7 @@ private:
 //	Increases the total fuel consumed taking into account the road type
 //		Preconditions: Fuel consumed is in gallons
 //		Postconditions: Total fuel consumed increased by the miles driven
-	void increaseFuelConsumed(double miles, RoadType roadType);
+	void increaseFuelConsumed(double miles, TripLeg::RoadType roadType);
 
 
 //==============================================================================
@@ -149,4 +139,4 @@ private:
 };
 
 
-#endif /* WICHITATOMONTICELLO_HPP_ */
+#endif /* TRIP_HPP_ */

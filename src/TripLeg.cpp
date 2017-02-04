@@ -8,7 +8,6 @@
 ******************************************************************************/
 
 #include "TripLeg.hpp"
-#include "Enums.hpp"
 
 using namespace std;
 
@@ -40,6 +39,6 @@ TripLeg::TripLeg(double distance, RoadType roadType)
 //==============================================================================
 
 
-double TripLeg::distance() 		{ return mDistance; }
+double TripLeg::getDistance() 				{ return mDistance; }
 
-RoadType TripLeg::roadType() 	{ return mRoadType; }
+TripLeg::RoadType TripLeg::getRoadType() 	{ return mRoadType; }

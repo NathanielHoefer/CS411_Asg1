@@ -27,7 +27,6 @@ Vehicle::Vehicle()
 	mCityMPG = 0;
 	mHighwayMPG = 0;
 	mCurrentFuel = 0;
-	mRoadType = DEFAULT;
 }
 
 
@@ -45,7 +44,6 @@ Vehicle::Vehicle(string make, string model, double engine, int cylinders,
 	mCityMPG = cityMPG;
 	mHighwayMPG = highwayMPG;
 	mCurrentFuel = tankSize;
-	mRoadType = DEFAULT;
 }
 
 
@@ -54,21 +52,21 @@ Vehicle::Vehicle(string make, string model, double engine, int cylinders,
 //==============================================================================
 
 
-string Vehicle::make() 			{ return mMake; }
+string Vehicle::getMake() 			{ return mMake; }
 
-string Vehicle::model()			{ return mModel; }
+string Vehicle::getModel()			{ return mModel; }
 
-double Vehicle::engine() 		{ return mEngine; }
+double Vehicle::getEngine() 		{ return mEngine; }
 
-int Vehicle::cylinderCount()	{ return mCylinderCnt; }
+int Vehicle::getCylinderCount()		{ return mCylinderCnt; }
 
-double Vehicle::tankSize() 		{ return mTankSize; }
+double Vehicle::getTankSize() 		{ return mTankSize; }
 
-int Vehicle::cityMPG() 			{ return mCityMPG; }
+int Vehicle::getCityMPG() 			{ return mCityMPG; }
 
-int Vehicle::highwayMPG() 		{ return mHighwayMPG; }
+int Vehicle::getHighwayMPG() 		{ return mHighwayMPG; }
 
-double Vehicle::currentFuel() 	{ return mCurrentFuel; }
+double Vehicle::getCurrentFuel() 	{ return mCurrentFuel; }
 
 
 //==============================================================================
@@ -76,9 +74,17 @@ double Vehicle::currentFuel() 	{ return mCurrentFuel; }
 //==============================================================================
 
 
-double Vehicle::calcFuelConsumed(double miles, RoadType roadType)
+double Vehicle::calcFuelConsumed(double miles, TripLeg::RoadType roadType)
 {
-	//TODO Calculate fuel consumed
+	double mpg;
+
+	if (roadType == TripLeg::CITY) {
+		mpg = mCityMPG;
+	} else if (roadType == TripLeg::HIGHWAY) {
+		mpg = mHighwayMPG;
+	}
+
+	return miles / mpg;
 
 }
 
@@ -86,13 +92,9 @@ double Vehicle::calcFuelConsumed(double miles, RoadType roadType)
 //==============================================================================
 
 
-void Vehicle::consumeFuel(double miles, RoadType roadType)
+void Vehicle::consumeFuel(double gallons)
 {
-
-	if (mRoadType == CITY) {
-		mCurrentFuel -= miles / mCityMPG;
-	} else if (mRoadType == HIGHWAY) {
-		mCurrentFuel -= miles / mHighwayMPG;
+	if (gallons <= mCurrentFuel) {
+		mCurrentFuel -= gallons;
 	}
-
 }

@@ -10,13 +10,16 @@
 #ifndef TRIPLEG_HPP_
 #define TRIPLEG_HPP_
 
-#include "Enums.hpp"
 
 using namespace std;
 
 
 class TripLeg
 {
+
+public:
+
+	enum RoadType { HIGHWAY, CITY, DEFAULT };
 
 private:
 
@@ -40,8 +43,8 @@ public:
 // ACCESSORS / MUTATORS ========================================================
 
 
-	double distance();
-	RoadType roadType();
+	double getDistance();
+	RoadType getRoadType();
 
 };
 
