@@ -147,6 +147,16 @@ private:
 //		Postconditions: Total fuel purchased increased by difference in gas tank
 	void increaseFuelPurchased();
 
+
+//==============================================================================
+
+
+//	Calculates the amount of fuel to be used on the way to the next station
+//		Preconditions: None
+//		Postconditions: None
+//		Returns: number of gallons of fuel needed for next gas station
+	double calcFuelUntilStation(vector<TripLeg> &tripLegs,
+								int currLeg, double legTravelled);
 };
 
 

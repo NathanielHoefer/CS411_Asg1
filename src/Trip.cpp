@@ -67,17 +67,19 @@ void Trip::runTrip(vector<TripLeg> &legs)
 
 	for (int i = 0; i < (int)legs.size(); i++) {
 
+		cout << "Leg: " << i;
+
 		// Sets MPG for the trip leg
 		int mpg = mVehicle.getMPG(legs.at(i).getRoadType());
-		int legDistance = legs.at(i).getDistance();
+		double legDistance = legs.at(i).getDistance();
 		TripLeg::RoadType roadType = legs.at(i).getRoadType();
 
-		cout << "MPG: " << mpg;
+		cout << " MPG: " << mpg;
 
 
 		// Sets to remaining miles until gas station
 		double legTravelled;		// The miles travelled in the current leg
-		legTravelled = fmod((gasDistance - milesTravelled),gasDistance);
+		legTravelled = milesTravelled;
 		mVehicle.consumeFuel(legTravelled / mpg);
 		bool isNextStationInLeg = true;
 
@@ -94,23 +96,23 @@ void Trip::runTrip(vector<TripLeg> &legs)
 			}
 
 			// Will it make it to the next gas station?
-			bool isEnoughGasUntilStation = true;
+			double fueltoStation;
 			if (isNextStationInLeg) {
-
-				double fuelConsumed = mVehicle.calcFuelConsumed(gasDistance, roadType);
-				if (fuelConsumed > mVehicle.getCurrentFuel()) {
-					isEnoughGasUntilStation = false;
-				}
+				fueltoStation = mVehicle.calcFuelConsumed(gasDistance, roadType);
 			} else {
-				// TODO Calculate fuel to next station
+				fueltoStation = calcFuelUntilStation(legs, i, legTravelled);
 			}
 
 
 			// Stopping at gas station if needed
-			if (!isEnoughGasUntilStation) {
+			if (fueltoStation > mVehicle.getCurrentFuel()) {
+				cout << "-------Before Refuel Tank: " << mVehicle.getCurrentFuel() << endl;
 				increaseFuelPurchased();
 				mVehicle.fillTank();
 				mGStationCnt++;
+
+				cout << "---Gas Stop: " << mGStationCnt << " Leg: " << i
+						<< " leg Travelled: " << legTravelled << endl;
 			}
 
 			// Update current local travel and getVehicle tank
@@ -120,13 +122,17 @@ void Trip::runTrip(vector<TripLeg> &legs)
 			} else {
 				double remainder = legDistance - legTravelled;
 				legTravelled += remainder;
+				milesTravelled = gasDistance - remainder;
 				mVehicle.consumeFuel(remainder / mpg);
 			}
+
+			cout << "-----Leg: " << i << " Leg Travelled: " << legTravelled
+					<< " Tank: " << mVehicle.getCurrentFuel() << endl;
 		}
 
 		// End of tripleg calculations
 		mFuelConsumed += mVehicle.calcFuelConsumed(legDistance, roadType);
-		mDriveTime += calcDriveTime(legDistance, roadType);
+		mDriveTime += round(calcDriveTime(legDistance, roadType));
 		if (roadType == TripLeg::CITY) {
 			mCityMiles += legDistance;
 		} else if (roadType == TripLeg::HIGHWAY) {
@@ -139,8 +145,13 @@ void Trip::runTrip(vector<TripLeg> &legs)
 	refuelTime = calcRefuelTime();
 	restroomTime = calcRestroomTime();
 	sleepTime = calcSleepTime();
+
+	cout << "RefuelT = " << refuelTime << " RestRT = " << restroomTime << " SleepT = " << sleepTime << endl;
+
 	mTripTime = mDriveTime + refuelTime + restroomTime + sleepTime;
 
+	cout << "City Miles = " << mCityMiles << " Highway Miles = " << mHighwayMiles
+			<< " Total Miles = " << mCityMiles + mHighwayMiles << endl << endl;
 }
 
 
@@ -220,7 +231,7 @@ int Trip::calcRefuelTime()
 
 int Trip::calcRestroomTime()
 {
-	return mGStationCnt * mParms.getRestroomTime();
+	return (mGStationCnt * mParms.getRestroomTime()) / 2;
 }
 
 
@@ -229,14 +240,14 @@ int Trip::calcRestroomTime()
 
 int Trip::calcSleepTime()
 {
-	double numOfNaps = mDriveTime / mParms.getAwakeTime();
+	int numOfNaps = mDriveTime / mParms.getAwakeTime();
 
 	// Checks to see if arrival is exactly at nap time
-	if ((int)numOfNaps % mParms.getNapTime() == 0) {
+	if (numOfNaps != 0 && numOfNaps % mParms.getNapTime() == 0) {
 		numOfNaps--;
 	}
 
-	return (int)numOfNaps * mParms.getNapTime();
+	return numOfNaps * mParms.getNapTime();
 }
 
 
@@ -274,4 +285,60 @@ void Trip::increaseFuelConsumed(double miles, TripLeg::RoadType roadType)
 void Trip::increaseFuelPurchased()
 {
 	mFuelPurchased += mVehicle.getTankSize() - mVehicle.getCurrentFuel();
+}
+
+
+//==============================================================================
+
+
+double Trip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
+								  int currLeg, double legTravelled)
+{
+	double cityMiles, highwayMiles;
+	cityMiles = highwayMiles = 0;
+	TripLeg::RoadType type = tripLegs.at(currLeg).getRoadType();
+
+	double gasDist = mParms.getGasDistance();
+
+	// Add remaining miles in current trip
+	if (type == TripLeg::CITY) {
+		cityMiles += tripLegs.at(currLeg).getDistance() - legTravelled;
+	} else if (type == TripLeg::HIGHWAY) {
+		highwayMiles += tripLegs.at(currLeg).getDistance() - legTravelled;
+	}
+
+	// Loop until next gas station is found
+	for (int i = currLeg + 1; i < (int)tripLegs.size(); i++) {
+		double tripDist = tripLegs.at(i).getDistance();
+		TripLeg::RoadType type = tripLegs.at(i).getRoadType();
+		double distance = cityMiles + highwayMiles;
+
+
+		if (distance < gasDist) {
+			// Gas station is in current trip leg
+			if ((distance + tripDist) > gasDist) {
+				// Add the remainder of the distance
+				if (type == TripLeg::CITY) {
+					cityMiles += gasDist - distance;
+				} else if (type == TripLeg::HIGHWAY) {
+					highwayMiles += gasDist - distance;
+				}
+			} else {
+				// Trip leg doesn't contain gas station
+				if (type == TripLeg::CITY) {
+					cityMiles += tripDist;
+				} else if (type == TripLeg::HIGHWAY) {
+					highwayMiles += tripDist;
+				}
+			}
+		} else {
+			// To exit loop
+			i = tripLegs.size();
+		}
+	}
+
+	double gallons = mVehicle.calcFuelConsumed(cityMiles, TripLeg::CITY) +
+					 mVehicle.calcFuelConsumed(highwayMiles, TripLeg::HIGHWAY);
+
+	return gallons;
 }

@@ -10,7 +10,9 @@
 #include "Trip.hpp"
 #include "TripLeg.hpp"
 #include "Vehicle.hpp"
+#include <string>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 
@@ -23,24 +25,23 @@ void tripTesting();
 
 int main()
 {
-//	cout << "Initial Submission" << endl;
-//
-//	vector<Vehicle*> vehicles = initializeVehicles();
-//	vector<TripLeg*> tripLegs = initializeTripLegs();
-//
-//	for (int i = 0; i < (int)vehicles.size(); i++) {
-//		cout << "Car " << i + 1 << ": Model :" <<
-//				vehicles[i]->getModel() << endl;
-//	}
-//
-//	cout << "\n---------------------------\n\n";
-//
-//	for (int i = 0; i < (int)tripLegs.size(); i++) {
-//		cout << "Leg " << i + 1 << ": Distance :" <<
-//				tripLegs[i]->getDistance() << endl;
-//	}
+	cout << "Assignment 1" << endl << endl;;
 
-	tripTesting();
+	vector<Vehicle> vehicles = initializeVehicles();
+	vector<TripLeg> tripLegs = initializeTripLegs();
+	Parameters parms;
+
+	parms.initializeParms();
+
+	cout << parms.getCityMph() << endl;
+	cout << parms.getHighwayMph() << endl;
+	cout << parms.getFuelPrice() << endl;
+	cout << parms.getGasDistance() << endl;
+	cout << parms.getRefuelTime() << endl;
+	cout << parms.getRestroomTime() << endl;
+	cout << parms.getNapTime() << endl;
+	cout << parms.getAwakeTime() << endl;
+
 }
 
 
@@ -48,14 +49,15 @@ int main()
 //==============================================================================
 
 
+
 void tripTesting()
 {
 	// Initialization
-	Vehicle vehicle("Chevrolet", "Spark", 1.2, 4, 10.5, 28, 36);
+	Vehicle vehicle("Chevrolet", "Spark", 1.2, 4, 1.7, 8, 14);
 	vector<TripLeg> tripLegs;
 	tripLegs.push_back(TripLeg(3.3, TripLeg::CITY));
 	tripLegs.push_back(TripLeg(23.2, TripLeg::HIGHWAY));
-	tripLegs.push_back(TripLeg(0.05, TripLeg::CITY));
+	tripLegs.push_back(TripLeg(14.6, TripLeg::CITY));
 	Parameters parms(25, 80, 2.19, 20, 10, 15, 8*60, 10);
 	Trip trip(vehicle, parms);
 
@@ -63,6 +65,74 @@ void tripTesting()
 
 	trip.printTripDetails();
 }
+
+
+////==============================================================================
+//
+//
+//double requestInput(double defaultVal)
+//{
+//	double value = defaultVal;
+//	string input = "";
+//
+//	while (true) {
+//		getline(cin, input);
+//
+//		if (input == "") {
+//			return defaultVal;
+//		}
+//
+//		// This code converts from string to number safely.
+//		stringstream myStream(input);
+//		if (myStream >> value)
+//			return value;
+//		cout << "--Invalid value, please try again" << endl;
+//	}
+//}
+//
+//
+////==============================================================================
+//
+//
+//Parameters initializeParms()
+//{
+//	int cityMPH, highwayMPH, refuelTime, restroomTime, napTime, awakeTime;
+//	double fuelPrice, gasDistance;
+//
+//	cout << "Enter the following parameters: \n" << endl;
+//
+//	cout << "Average speed in the city (MPH) [25]: " << endl;
+//	cityMPH = (int)requestInput(CITY_MPH);
+//
+//	cout << "Average speed on the highway (MPH) [70]: " << endl;
+//	highwayMPH = (int)requestInput(HIGHWAY_MPH);
+//
+//	cout << "Average fuel price per gallon [2.19]: " << endl;
+//	fuelPrice = requestInput(FUEL_PRICE);
+//
+//	cout << "Distance between gas stations (miles) [80.0]: " << endl;
+//	gasDistance = requestInput(GAS_DISTANCE);
+//
+//	cout << "Time required to refuel (minutes) [20]: " << endl;
+//	refuelTime = (int)requestInput(REFUEL_TIME);
+//
+//	cout << "Time required to use the restroom (minutes) [10]: " << endl;
+//	restroomTime = (int)requestInput(RESTROOM_TIME);
+//
+//	cout << "Time required to take a nap (minutes) [15]: " << endl;
+//	napTime = (int)requestInput(NAP_TIME);
+//
+//	cout << "Time before requiring sleep (hours) [8]: " << endl;
+//	awakeTime = (int)requestInput(AWAKE_TIME) * 60;
+//
+//	Parameters parms(cityMPH, highwayMPH, fuelPrice, refuelTime, restroomTime,
+//					 napTime, awakeTime, gasDistance);
+//
+//	return parms;
+//}
+
+
+//==============================================================================
 
 
 vector<Vehicle> initializeVehicles()

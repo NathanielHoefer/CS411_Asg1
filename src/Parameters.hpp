@@ -13,6 +13,17 @@
 using namespace std;
 
 
+// Constants for all default values
+static const int CITY_MPH = 25;
+static const int HIGHWAY_MPH = 70;
+static const double FUEL_PRICE = 2.19;		// Per gallon
+static const double GAS_DISTANCE = 80.0;	// Distance between gas stations
+static const int REFUEL_TIME = 20;			// in minutes
+static const int RESTROOM_TIME = 10;		// in minutes
+static const int NAP_TIME = 15;				// in minutes
+static const int AWAKE_TIME = 8;			// in hours
+
+
 class Parameters
 {
 
@@ -75,6 +86,27 @@ public:
 	double getGasDistance() const;
 
 	void setGasDistance(double gastDistance);
+
+
+// MEMBER FUNCTIONS ============================================================
+
+
+//	Requests input from user to initialize all of the parameters
+//		Preconditions: None
+//		Postconditions: The member variables are updated
+	void initializeParms();
+
+
+private:
+
+//==============================================================================
+
+
+//	Requests and validates value entered by user
+//		Preconditions: None
+//		Postconditions: None
+//		Returns: A valid double value
+	double requestInput(double defaultVal);
 };
 
 
