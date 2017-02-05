@@ -28,6 +28,7 @@ Parameters::Parameters()
 	mNapTime = 0;
 	mAwakeTime = 0;
 	mGasDistance = 0;
+
 }
 
 Parameters::Parameters(int cityMPH, int highwayMPH, double fuelPrice,

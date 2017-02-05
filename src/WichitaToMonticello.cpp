@@ -11,6 +11,7 @@
 #include "TripLeg.hpp"
 #include "Vehicle.hpp"
 #include <string>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -33,6 +34,16 @@ int main()
 
 	parms.initializeParms();
 
+	Trip initialTrip(vehicles.at(0), parms);
+	initialTrip.runTrip(tripLegs);
+
+	Trip shortestTime = initialTrip;
+	Trip longestTime = initialTrip;
+	Trip leastFuelAdded = initialTrip;
+	Trip mostFuelAdded = initialTrip;
+	Trip leastFuelUsed = initialTrip;
+	Trip mostFuelUsed = initialTrip;
+
 	cout << parms.getCityMph() << endl;
 	cout << parms.getHighwayMph() << endl;
 	cout << parms.getFuelPrice() << endl;
@@ -41,6 +52,84 @@ int main()
 	cout << parms.getRestroomTime() << endl;
 	cout << parms.getNapTime() << endl;
 	cout << parms.getAwakeTime() << endl;
+
+	// Process each vehicle trip
+	for (int i = 1; i < (int)vehicles.size(); i++) {
+		Trip trip(vehicles.at(i), parms);
+		trip.runTrip(tripLegs);
+
+		if (trip.getTripTime() < shortestTime.getTripTime()) {
+			shortestTime = trip;
+		}
+
+		if (trip.getTripTime() > longestTime.getTripTime()) {
+			longestTime = trip;
+		}
+
+		if (trip.getFuelPurchased() < leastFuelAdded.getFuelPurchased()) {
+			leastFuelAdded = trip;
+		}
+
+		if (trip.getFuelPurchased() > mostFuelAdded.getFuelPurchased()) {
+			mostFuelAdded = trip;
+		}
+
+		if (trip.getFuelConsumed() < leastFuelUsed.getFuelConsumed()) {
+			leastFuelUsed = trip;
+		}
+
+		if (trip.getFuelConsumed() > mostFuelUsed.getFuelConsumed()) {
+			mostFuelUsed = trip;
+		}
+	}
+
+	cout << "========================================================" << endl;
+	cout << "                      Trip Results                      " << endl;
+	cout << "========================================================" << endl;
+
+	cout << setw(14) << "" << "Total miles driven = " << fixed << setprecision(2)
+			<< shortestTime.getCityMiles() + shortestTime.getHighwayMiles()
+			<< endl;
+	cout << setw(10) << "" << fixed << setprecision(2)
+			<< "City = " << setw(12) << shortestTime.getCityMiles();
+	cout << fixed << setprecision(2) << "Highway = "
+			<< shortestTime.getCityMiles() << endl;
+
+
+	cout << "========================================================" << endl;
+	cout << "   1. Vehicle ariving first at Jefferson's Monticello:  " << endl;
+	cout << "========================================================" << endl;
+	shortestTime.printTripDetails();
+
+	cout << "========================================================" << endl;
+	cout << "   2. Vehicle arriving last at Jefferson’s Monticello:  " << endl;
+	cout << "========================================================" << endl;
+	longestTime.printTripDetails();
+
+	cout << "========================================================" << endl;
+	cout << "   3. Vehicle costing the least to reach Jefferson’s    " << endl;
+	cout << "        Monticello based on fuel added to tank:         " << endl;
+	cout << "========================================================" << endl;
+	leastFuelAdded.printTripDetails();
+
+	cout << "========================================================" << endl;
+	cout << "   4. Vehicle costing the most to reach Jefferson’s     " << endl;
+	cout << "        Monticello based on fuel added to tank:         " << endl;
+	cout << "========================================================" << endl;
+	mostFuelAdded.printTripDetails();
+
+	cout << "========================================================" << endl;
+	cout << "   5. Vehicle costing the least to reach Jefferson’s    " << endl;
+	cout << "         Monticello based on actual fuel used:          " << endl;
+	cout << "========================================================" << endl;
+	leastFuelUsed.printTripDetails();
+
+	cout << "========================================================" << endl;
+	cout << "   6. Vehicle costing the most to reach Jefferson’s     " << endl;
+	cout << "         Monticello based on actual fuel used:          " << endl;
+	cout << "========================================================" << endl;
+	mostFuelUsed.printTripDetails();
+
 
 }
 
@@ -65,71 +154,6 @@ void tripTesting()
 
 	trip.printTripDetails();
 }
-
-
-////==============================================================================
-//
-//
-//double requestInput(double defaultVal)
-//{
-//	double value = defaultVal;
-//	string input = "";
-//
-//	while (true) {
-//		getline(cin, input);
-//
-//		if (input == "") {
-//			return defaultVal;
-//		}
-//
-//		// This code converts from string to number safely.
-//		stringstream myStream(input);
-//		if (myStream >> value)
-//			return value;
-//		cout << "--Invalid value, please try again" << endl;
-//	}
-//}
-//
-//
-////==============================================================================
-//
-//
-//Parameters initializeParms()
-//{
-//	int cityMPH, highwayMPH, refuelTime, restroomTime, napTime, awakeTime;
-//	double fuelPrice, gasDistance;
-//
-//	cout << "Enter the following parameters: \n" << endl;
-//
-//	cout << "Average speed in the city (MPH) [25]: " << endl;
-//	cityMPH = (int)requestInput(CITY_MPH);
-//
-//	cout << "Average speed on the highway (MPH) [70]: " << endl;
-//	highwayMPH = (int)requestInput(HIGHWAY_MPH);
-//
-//	cout << "Average fuel price per gallon [2.19]: " << endl;
-//	fuelPrice = requestInput(FUEL_PRICE);
-//
-//	cout << "Distance between gas stations (miles) [80.0]: " << endl;
-//	gasDistance = requestInput(GAS_DISTANCE);
-//
-//	cout << "Time required to refuel (minutes) [20]: " << endl;
-//	refuelTime = (int)requestInput(REFUEL_TIME);
-//
-//	cout << "Time required to use the restroom (minutes) [10]: " << endl;
-//	restroomTime = (int)requestInput(RESTROOM_TIME);
-//
-//	cout << "Time required to take a nap (minutes) [15]: " << endl;
-//	napTime = (int)requestInput(NAP_TIME);
-//
-//	cout << "Time before requiring sleep (hours) [8]: " << endl;
-//	awakeTime = (int)requestInput(AWAKE_TIME) * 60;
-//
-//	Parameters parms(cityMPH, highwayMPH, fuelPrice, refuelTime, restroomTime,
-//					 napTime, awakeTime, gasDistance);
-//
-//	return parms;
-//}
 
 
 //==============================================================================

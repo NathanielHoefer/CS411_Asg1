@@ -51,6 +51,8 @@ double Trip::getHighwayMiles()		{ return mHighwayMiles; }
 
 int Trip::getDriveTime() 			{ return mDriveTime; }
 
+int Trip::getTripTime()			{ return mTripTime; }
+
 int Trip::gStationCount() 		{ return mGStationCnt; }
 
 
@@ -173,7 +175,6 @@ void Trip::printTripDetails()
 	hours = remainingTime / 60;
 	minutes = remainingTime % 60;
 
-	cout << "========================================================" << endl;
 	cout << setw(leftTitleSpace) << "";
 	cout << mVehicle.getMake() << " " << mVehicle.getModel() 		   << endl;
 	cout << "--------------------------------------------------------" << endl;
@@ -194,9 +195,7 @@ void Trip::printTripDetails()
 	cout << "Fuel remaining = "
 			<< mVehicle.getTankSize() - mVehicle.getCurrentFuel() << endl;
 	cout << "Fuel used  = " << setw(15) << mFuelConsumed;
-	cout << "Fuel stops     = " << mGStationCnt << endl;;
-	cout << "========================================================" << endl;
-	cout << endl;
+	cout << "Fuel stops     = " << mGStationCnt << endl;
 }
 
 

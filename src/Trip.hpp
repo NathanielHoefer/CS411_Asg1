@@ -55,6 +55,7 @@ public:
 	double getCityMiles();
 	double getHighwayMiles();
 	int getDriveTime();
+	int getTripTime();
 	int gStationCount();
 
 
