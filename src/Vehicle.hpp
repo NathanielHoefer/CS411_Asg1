@@ -30,6 +30,7 @@ public:
 	Vehicle(std::string make, std::string model, double engine, int cylinders,
 			double tankSize, int cityMPG, int highwayMPG);
 
+	std::string getMake();
 	std::string getModel();
 	double 	getEngine();
 	int 	getCylinderCount();

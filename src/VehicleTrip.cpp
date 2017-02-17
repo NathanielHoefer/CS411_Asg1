@@ -12,10 +12,11 @@
 #include <math.h>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
-Trip::Trip(Vehicle &vehicle, Parameters &parms)
+VehicleTrip::VehicleTrip(Vehicle &vehicle, Parameters &parms)
 {
 	mParms = parms;
 	mVehicle = vehicle;
@@ -29,16 +30,16 @@ Trip::Trip(Vehicle &vehicle, Parameters &parms)
 }
 
 
-Vehicle Trip::getVehicle() 			{ return mVehicle; }
-double 	Trip::getFuelPurchased() 	{ return mFuelPurchased; }
-double 	Trip::getFuelConsumed() 	{ return mFuelConsumed; }
-double 	Trip::getCityMiles() 		{ return mCityMiles; }
-double 	Trip::getHighwayMiles()		{ return mHighwayMiles; }
-int 	Trip::getDriveTime() 		{ return mDriveTime; }
-int 	Trip::getTripTime()			{ return mTripTime; }
-int 	Trip::gStationCount() 		{ return mGStationCnt; }
+Vehicle VehicleTrip::getVehicle() 			{ return mVehicle; }
+double 	VehicleTrip::getFuelPurchased() 	{ return mFuelPurchased; }
+double 	VehicleTrip::getFuelConsumed() 	{ return mFuelConsumed; }
+double 	VehicleTrip::getCityMiles() 		{ return mCityMiles; }
+double 	VehicleTrip::getHighwayMiles()		{ return mHighwayMiles; }
+int 	VehicleTrip::getDriveTime() 		{ return mDriveTime; }
+int 	VehicleTrip::getTripTime()			{ return mTripTime; }
+int 	VehicleTrip::gStationCount() 		{ return mGStationCnt; }
 
-void Trip::runTrip(vector<TripLeg> &legs)
+void VehicleTrip::runTrip(vector<TripLeg> &legs)
 {
 
 	double milesTravelled = 0;
@@ -143,7 +144,7 @@ void Trip::runTrip(vector<TripLeg> &legs)
 			<< " Total Miles = " << mCityMiles + mHighwayMiles << endl << endl;
 }
 
-void Trip::printTripDetails()
+void VehicleTrip::printTripDetails()
 {
 	// Calculations for centering title
 	int titleLen = mVehicle.getMake().size() + mVehicle.getModel().size() + 1;
@@ -182,11 +183,33 @@ void Trip::printTripDetails()
 	cout << "gal    Fuel stops     = " << mGStationCnt << endl << endl << endl;
 }
 
+std::ostream & operator <<(std::ostream &lhs, VehicleTrip &rhs)
+{
+	std::stringstream stream;
+
+	lhs << rhs.mVehicle;
+	stream << rhs.mTripTime;
+	lhs << stream.str() + ",";
+	stream.str("");
+	stream.clear();
+	stream << rhs.mFuelPurchased;
+	lhs << stream.str() + ",";
+	stream.str("");
+	stream.clear();
+	stream << rhs.mFuelConsumed;
+	lhs << stream.str() + ",";
+	stream.str("");
+	stream.clear();
+	stream << rhs.mGStationCnt;
+	lhs << stream.str();
+
+	return lhs;
+}
 
 //==============================================================================
 
 
-int Trip::calcDriveTime(double miles, TripLeg::RoadType roadType)
+int VehicleTrip::calcDriveTime(double miles, TripLeg::RoadType roadType)
 {
 	int mph;
 
@@ -203,7 +226,7 @@ int Trip::calcDriveTime(double miles, TripLeg::RoadType roadType)
 //==============================================================================
 
 
-int Trip::calcRefuelTime()
+int VehicleTrip::calcRefuelTime()
 {
 	return mGStationCnt * mParms.getRefuelTime();
 }
@@ -212,7 +235,7 @@ int Trip::calcRefuelTime()
 //==============================================================================
 
 
-int Trip::calcRestroomTime()
+int VehicleTrip::calcRestroomTime()
 {
 	return (mGStationCnt * mParms.getRestroomTime()) / 2;
 }
@@ -221,7 +244,7 @@ int Trip::calcRestroomTime()
 //==============================================================================
 
 
-int Trip::calcSleepTime()
+int VehicleTrip::calcSleepTime()
 {
 	int numOfNaps = mDriveTime / mParms.getAwakeTime();
 
@@ -237,7 +260,7 @@ int Trip::calcSleepTime()
 //==============================================================================
 
 
-double Trip::calcGasCost(bool isFuelAdded)
+double VehicleTrip::calcGasCost(bool isFuelAdded)
 {
 	double cost;
 
@@ -254,7 +277,7 @@ double Trip::calcGasCost(bool isFuelAdded)
 //==============================================================================
 
 
-void Trip::increaseFuelConsumed(double miles, TripLeg::RoadType roadType)
+void VehicleTrip::increaseFuelConsumed(double miles, TripLeg::RoadType roadType)
 {
 	double gallons = mVehicle.calcFuelConsumed(miles, roadType);
 
@@ -265,7 +288,7 @@ void Trip::increaseFuelConsumed(double miles, TripLeg::RoadType roadType)
 //==============================================================================
 
 
-void Trip::increaseFuelPurchased()
+void VehicleTrip::increaseFuelPurchased()
 {
 	mFuelPurchased += mVehicle.getTankSize() - mVehicle.getCurrentFuel();
 }
@@ -274,7 +297,7 @@ void Trip::increaseFuelPurchased()
 //==============================================================================
 
 
-double Trip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
+double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
 								  int currLeg, double legTravelled)
 {
 	double cityMiles, highwayMiles;
@@ -325,3 +348,5 @@ double Trip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
 
 	return gallons;
 }
+
+

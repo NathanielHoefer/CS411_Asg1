@@ -10,40 +10,23 @@
 #ifndef TRIPLEG_HPP_
 #define TRIPLEG_HPP_
 
-
 class TripLeg
 {
 
 public:
-
 	enum RoadType { HIGHWAY, CITY, DEFAULT };
 
 private:
-
-// MEMBER VARIABLES ============================================================
-
-
 	double mDistance;
 	RoadType mRoadType;
 
-
 public:
-
-// CONSTRUCTORS ================================================================
-
-
 	TripLeg();
-
 	TripLeg(double distance, RoadType roadType);
-
-
-// ACCESSORS / MUTATORS ========================================================
-
 
 	double getDistance();
 	RoadType getRoadType();
 
 };
-
 
 #endif /* TRIPLEG_HPP_ */

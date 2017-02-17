@@ -9,20 +9,11 @@
 
 #include "TripLeg.hpp"
 
-//==============================================================================
-// CONSTRUCTORS / DESTRUCTORS
-//==============================================================================
-
-
 TripLeg::TripLeg()
 {
 	mDistance = 0;
 	mRoadType = DEFAULT;
 }
-
-
-//==============================================================================
-
 
 TripLeg::TripLeg(double distance, RoadType roadType)
 {
@@ -30,12 +21,5 @@ TripLeg::TripLeg(double distance, RoadType roadType)
 	mRoadType = roadType;
 }
 
-
-//==============================================================================
-// ACCESSORS / MUTATORS
-//==============================================================================
-
-
 double TripLeg::getDistance() 				{ return mDistance; }
-
 TripLeg::RoadType TripLeg::getRoadType() 	{ return mRoadType; }

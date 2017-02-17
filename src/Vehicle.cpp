@@ -8,6 +8,7 @@
 ******************************************************************************/
 
 #include "Vehicle.hpp"
+#include <sstream>
 
 using std::string;
 
@@ -82,9 +83,25 @@ void Vehicle::fillTank()
 	mCurrentFuel = mTankSize;
 }
 
-std::ostream & operator <<(std::ostream &lhs, Vehicle &rhs)
+std::ostream & operator <<(std::ostream &lhs, const Vehicle &rhs)
 {
-	lhs << rhs.mMake << rhs.mModel << rhs.mTankSize
-			<< rhs.mCityMPG << rhs.mHighwayMPG << rhs.mCurrentFuel;
+	std::stringstream stream;
+
+	lhs << rhs.mMake + ",";
+	lhs << rhs.mModel + ",";
+	stream << rhs.mTankSize;
+	lhs << stream.str() + ",";
+	stream.str("");
+	stream.clear();
+	stream << rhs.mCityMPG;
+	lhs << stream.str() + ",";
+	stream.str("");
+	stream.clear();
+	stream << rhs.mHighwayMPG;
+	lhs << stream.str() + ",";
+	stream.str("");
+	stream.clear();
+	stream << rhs.mCurrentFuel;
+	lhs << stream.str() + ",";
 	return lhs;
 }
