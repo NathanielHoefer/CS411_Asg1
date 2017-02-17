@@ -11,9 +11,6 @@
 #define TRIPLEG_HPP_
 
 
-using namespace std;
-
-
 class TripLeg
 {
 

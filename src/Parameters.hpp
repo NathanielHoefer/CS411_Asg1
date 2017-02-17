@@ -10,8 +10,6 @@
 #ifndef PARAMETERS_HPP_
 #define PARAMETERS_HPP_
 
-using namespace std;
-
 
 // Constants for all default values
 static const int CITY_MPH = 25;

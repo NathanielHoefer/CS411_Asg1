@@ -12,23 +12,23 @@
 #include <iomanip>
 #include <sstream>
 
+using namespace std;
 
-
-
-// CONSTRUCTORS ================================================================
+//==============================================================================
+// CONSTRUCTORS / DESTRUCTORS
+//==============================================================================
 
 
 Parameters::Parameters()
 {
-	mCityMPH = 0;
-	mHighwayMPH = 0;
-	mFuelPrice = 0;
-	mRefuelTime = 0;
-	mRestroomTime = 0;
-	mNapTime = 0;
-	mAwakeTime = 0;
-	mGasDistance = 0;
-
+	mCityMPH = CITY_MPH;
+	mHighwayMPH = HIGHWAY_MPH;
+	mFuelPrice = FUEL_PRICE;
+	mRefuelTime = REFUEL_TIME;
+	mRestroomTime = RESTROOM_TIME;
+	mNapTime = NAP_TIME;
+	mAwakeTime = AWAKE_TIME;
+	mGasDistance = GAS_DISTANCE;
 }
 
 Parameters::Parameters(int cityMPH, int highwayMPH, double fuelPrice,
@@ -46,46 +46,35 @@ Parameters::Parameters(int cityMPH, int highwayMPH, double fuelPrice,
 }
 
 
-// ACCESSORS / MUTATORS ========================================================
+//==============================================================================
+// ACCESSORS / MUTATORS
+//==============================================================================
 
 
 int Parameters::getAwakeTime() const { return mAwakeTime; }
-
 void Parameters::setAwakeTime(int awakeTime) { mAwakeTime = awakeTime; }
-
 int Parameters::getCityMph() const { return mCityMPH; }
-
 void Parameters::setCityMph(int cityMph) { mCityMPH = cityMph; }
-
 double Parameters::getFuelPrice() const { return mFuelPrice; }
-
 void Parameters::setFuelPrice(double fuelPrice) { mFuelPrice = fuelPrice; }
-
 int Parameters::getHighwayMph() const { return mHighwayMPH; }
-
 void Parameters::setHighwayMph(int highwayMph) { mHighwayMPH = highwayMph; }
-
 int Parameters::getNapTime() const { return mNapTime; }
-
 void Parameters::setNapTime(int napTime) { mNapTime = napTime; }
-
 int Parameters::getRefuelTime() const { return mRefuelTime; }
-
 void Parameters::setRefuelTime(int refuelTime) { mRefuelTime = refuelTime; }
-
 int Parameters::getRestroomTime() const { return mRestroomTime; }
-
 void Parameters::setRestroomTime(int restroomTime) {
 	mRestroomTime = restroomTime;
 }
-
 double Parameters::getGasDistance() const { return mGasDistance; }
-
 void Parameters::setGasDistance(double gastDistance) {
 	mGasDistance = gastDistance;
 }
 
 
+//==============================================================================
+// MEMBER FUNCTIONS
 //==============================================================================
 
 
@@ -95,6 +84,7 @@ void Parameters::initializeParms()
 	double fuelPrice, gasDistance;
 	string input = "";
 	bool isFinished, isApproved;
+	isFinished = isApproved = false;
 
 	while (!isFinished) {
 		isFinished = isApproved = false;
@@ -154,6 +144,8 @@ void Parameters::initializeParms()
 					<< fixed << setprecision(1) << setw(9) << gasDistance
 					<< "Fuel Price: $" << setprecision(2) << fuelPrice << endl;
 
+
+			// TODO Windows will only accept string as "Y\r"
 			getline(cin, input);
 
 			if (input == "Y" || input == "y") {
@@ -169,6 +161,8 @@ void Parameters::initializeParms()
 			}
 		}
 	}
+
+	cout << "Input: " << input << endl;
 
 	mCityMPH = cityMPH;
 	mHighwayMPH = highwayMPH;
@@ -196,7 +190,7 @@ double Parameters::requestInput(double defaultVal)
 	while (true) {
 		getline(cin, input);
 
-		if (input == "") {
+		if (input.empty() || input == "\r") {
 			return defaultVal;
 		}
 

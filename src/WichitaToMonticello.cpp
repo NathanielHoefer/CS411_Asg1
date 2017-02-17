@@ -7,15 +7,14 @@
 
 ******************************************************************************/
 
-#include "Trip.hpp"
 #include "TripLeg.hpp"
 #include "Vehicle.hpp"
+#include "VehicleTrip.hpp"
 #include <string>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <vector>
-
 
 using namespace std;
 
@@ -26,14 +25,13 @@ void tripTesting();
 
 int main()
 {
-	cout << "Assignment 1" << endl << endl;;
+	cout << "Assignment 1" << endl << endl;
 
 	vector<Vehicle> vehicles = initializeVehicles();
 	vector<TripLeg> tripLegs = initializeTripLegs();
 	Parameters parms;
 
-	parms.initializeParms();
-
+//	parms.initializeParms();
 	Trip initialTrip(vehicles.at(0), parms);
 	initialTrip.runTrip(tripLegs);
 
@@ -44,14 +42,6 @@ int main()
 	Trip leastFuelUsed = initialTrip;
 	Trip mostFuelUsed = initialTrip;
 
-	cout << parms.getCityMph() << endl;
-	cout << parms.getHighwayMph() << endl;
-	cout << parms.getFuelPrice() << endl;
-	cout << parms.getGasDistance() << endl;
-	cout << parms.getRefuelTime() << endl;
-	cout << parms.getRestroomTime() << endl;
-	cout << parms.getNapTime() << endl;
-	cout << parms.getAwakeTime() << endl;
 
 	// Process each vehicle trip
 	for (int i = 1; i < (int)vehicles.size(); i++) {
@@ -90,10 +80,10 @@ int main()
 	cout << setw(14) << "" << "Total miles driven = " << fixed << setprecision(2)
 			<< shortestTime.getCityMiles() + shortestTime.getHighwayMiles()
 			<< endl;
-	cout << setw(10) << "" << fixed << setprecision(2)
+	cout << setw(10) << "" << fixed << setprecision(2) << left
 			<< "City = " << setw(12) << shortestTime.getCityMiles();
 	cout << fixed << setprecision(2) << "Highway = "
-			<< shortestTime.getCityMiles() << endl;
+			<< shortestTime.getHighwayMiles() << endl << endl << endl;
 
 
 	cout << "========================================================" << endl;
@@ -131,12 +121,17 @@ int main()
 	mostFuelUsed.printTripDetails();
 
 
+	// For Testing
+	Parameters parms1;
+	Trip calcTrip(vehicles.at(23), parms1);
+	calcTrip.runTrip(tripLegs);
+	calcTrip.printTripDetails();
+
 }
 
 
 
 //==============================================================================
-
 
 
 void tripTesting()
@@ -170,7 +165,7 @@ vector<Vehicle> initializeVehicles()
 	vehicles.push_back(Vehicle("Chevrolet", "Sonic",
 									1.8, 4, 12, 25, 35));
 	vehicles.push_back(Vehicle("Chevrolet", "Camaro",
-									3.6, 6, 13, 13, 18));
+									3.6, 6, 13, 19, 28));
 	vehicles.push_back(Vehicle("Chevrolet", "Suburban C1500",
 									5.3, 8, 33, 13, 18));
 	vehicles.push_back(Vehicle("Chevrolet", "Suburban C2500",

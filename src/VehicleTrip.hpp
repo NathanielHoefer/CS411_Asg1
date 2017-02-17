@@ -15,8 +15,6 @@
 #include "Parameters.hpp"
 #include <vector>
 
-using namespace std;
-
 
 class Trip
 {
@@ -66,7 +64,7 @@ public:
 // 		total fuel used, time taken, amount spent on gas, and number of miles
 //		Preconditions: None
 //		Postconditions: Member variables are updated per calculations
-	void runTrip(vector<TripLeg> &legs);
+	void runTrip(std::vector<TripLeg> &legs);
 
 
 //==============================================================================
@@ -156,7 +154,7 @@ private:
 //		Preconditions: None
 //		Postconditions: None
 //		Returns: number of gallons of fuel needed for next gas station
-	double calcFuelUntilStation(vector<TripLeg> &tripLegs,
+	double calcFuelUntilStation(std::vector<TripLeg> &tripLegs,
 								int currLeg, double legTravelled);
 };
 

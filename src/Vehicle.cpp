@@ -9,13 +9,7 @@
 
 #include "Vehicle.hpp"
 
-using namespace std;
-
-
-//==============================================================================
-// CONSTRUCTORS / DESTRUCTORS
-//==============================================================================
-
+using std::string;
 
 Vehicle::Vehicle()
 {
@@ -28,10 +22,6 @@ Vehicle::Vehicle()
 	mHighwayMPG = 0;
 	mCurrentFuel = 0;
 }
-
-
-//==============================================================================
-
 
 Vehicle::Vehicle(string make, string model, double engine, int cylinders,
 			double tankSize, int cityMPG, int highwayMPG)
@@ -46,38 +36,18 @@ Vehicle::Vehicle(string make, string model, double engine, int cylinders,
 	mCurrentFuel = tankSize;
 }
 
-
-//==============================================================================
-// ACCESSORS / MUTATORS
-//==============================================================================
-
-
-string Vehicle::getMake() 			{ return mMake; }
-
-string Vehicle::getModel()			{ return mModel; }
-
-double Vehicle::getEngine() 		{ return mEngine; }
-
-int Vehicle::getCylinderCount()		{ return mCylinderCnt; }
-
-double Vehicle::getTankSize() 		{ return mTankSize; }
-
-int Vehicle::getCityMPG() 			{ return mCityMPG; }
-
-int Vehicle::getHighwayMPG() 		{ return mHighwayMPG; }
-
-double Vehicle::getCurrentFuel() 	{ return mCurrentFuel; }
-
-
-//==============================================================================
-// MEMBER FUNCTIONS
-//==============================================================================
-
+string 	Vehicle::getMake() 			{ return mMake; }
+string 	Vehicle::getModel()			{ return mModel; }
+double 	Vehicle::getEngine() 		{ return mEngine; }
+int 	Vehicle::getCylinderCount()	{ return mCylinderCnt; }
+double 	Vehicle::getTankSize() 		{ return mTankSize; }
+int 	Vehicle::getCityMPG() 		{ return mCityMPG; }
+int 	Vehicle::getHighwayMPG() 	{ return mHighwayMPG; }
+double 	Vehicle::getCurrentFuel() 	{ return mCurrentFuel; }
 
 double Vehicle::calcFuelConsumed(double miles, TripLeg::RoadType roadType)
 {
 	double mpg;
-
 	if (roadType == TripLeg::CITY) {
 		mpg = mCityMPG;
 	} else if (roadType == TripLeg::HIGHWAY) {
@@ -88,20 +58,13 @@ double Vehicle::calcFuelConsumed(double miles, TripLeg::RoadType roadType)
 
 }
 
-
-//==============================================================================
-
-
 void Vehicle::consumeFuel(double gallons)
 {
+	// Only reduce fuel if the tank wont be empty
 	if (gallons <= mCurrentFuel) {
 		mCurrentFuel -= gallons;
 	}
 }
-
-
-//==============================================================================
-
 
 int Vehicle::getMPG(TripLeg::RoadType type)
 {
@@ -111,15 +74,17 @@ int Vehicle::getMPG(TripLeg::RoadType type)
 	} else if (type == TripLeg::HIGHWAY) {
 		mpg = mHighwayMPG;
 	}
-
 	return mpg;
 }
-
-
-//==============================================================================
-
 
 void Vehicle::fillTank()
 {
 	mCurrentFuel = mTankSize;
+}
+
+std::ostream & operator <<(std::ostream &lhs, Vehicle &rhs)
+{
+	lhs << rhs.mMake << rhs.mModel << rhs.mTankSize
+			<< rhs.mCityMPG << rhs.mHighwayMPG << rhs.mCurrentFuel;
+	return lhs;
 }

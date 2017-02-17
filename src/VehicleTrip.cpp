@@ -7,18 +7,13 @@
 
 ******************************************************************************/
 
-#include "Trip.hpp"
+#include "VehicleTrip.hpp"
+
 #include <math.h>
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
-
-
-//==============================================================================
-// CONSTRUCTORS / DESTRUCTORS
-//==============================================================================
-
 
 Trip::Trip(Vehicle &vehicle, Parameters &parms)
 {
@@ -34,32 +29,14 @@ Trip::Trip(Vehicle &vehicle, Parameters &parms)
 }
 
 
-//==============================================================================
-// ACCESSORS / MUTATORS
-//==============================================================================
-
-
-Vehicle Trip::getVehicle() 		{ return mVehicle; }
-
-double Trip::getFuelPurchased() 	{ return mFuelPurchased; }
-
-double Trip::getFuelConsumed() 	{ return mFuelConsumed; }
-
-double Trip::getCityMiles() 		{ return mCityMiles; }
-
-double Trip::getHighwayMiles()		{ return mHighwayMiles; }
-
-int Trip::getDriveTime() 			{ return mDriveTime; }
-
-int Trip::getTripTime()			{ return mTripTime; }
-
-int Trip::gStationCount() 		{ return mGStationCnt; }
-
-
-//==============================================================================
-// MEMBER FUNCTIONS
-//==============================================================================
-
+Vehicle Trip::getVehicle() 			{ return mVehicle; }
+double 	Trip::getFuelPurchased() 	{ return mFuelPurchased; }
+double 	Trip::getFuelConsumed() 	{ return mFuelConsumed; }
+double 	Trip::getCityMiles() 		{ return mCityMiles; }
+double 	Trip::getHighwayMiles()		{ return mHighwayMiles; }
+int 	Trip::getDriveTime() 		{ return mDriveTime; }
+int 	Trip::getTripTime()			{ return mTripTime; }
+int 	Trip::gStationCount() 		{ return mGStationCnt; }
 
 void Trip::runTrip(vector<TripLeg> &legs)
 {
@@ -67,25 +44,33 @@ void Trip::runTrip(vector<TripLeg> &legs)
 	double milesTravelled = 0;
 	double gasDistance = mParms.getGasDistance();
 
+	int gasStations = 0;
+
 	for (int i = 0; i < (int)legs.size(); i++) {
 
-		cout << "Leg: " << i;
+		cout << "Leg: " << i+1;
 
 		// Sets MPG for the trip leg
 		int mpg = mVehicle.getMPG(legs.at(i).getRoadType());
 		double legDistance = legs.at(i).getDistance();
 		TripLeg::RoadType roadType = legs.at(i).getRoadType();
 
-		cout << " MPG: " << mpg;
+		cout << "	  MPG: " << mpg;
 
 
 		// Sets to remaining miles until gas station
 		double legTravelled;		// The miles travelled in the current leg
-		legTravelled = milesTravelled;
+
+		if (milesTravelled > legDistance) {
+			legTravelled = legDistance;
+		} else {
+			legTravelled = milesTravelled;
+		}
+
 		mVehicle.consumeFuel(legTravelled / mpg);
 		bool isNextStationInLeg = true;
 
-		cout << " legTravelled: " << legTravelled << " Tank: "
+		cout << "	legTravelled: " << setw(7) << legTravelled << "	Tank: "
 				<< mVehicle.getCurrentFuel() << endl;
 
 
@@ -105,7 +90,6 @@ void Trip::runTrip(vector<TripLeg> &legs)
 				fueltoStation = calcFuelUntilStation(legs, i, legTravelled);
 			}
 
-
 			// Stopping at gas station if needed
 			if (fueltoStation > mVehicle.getCurrentFuel()) {
 				cout << "-------Before Refuel Tank: " << mVehicle.getCurrentFuel() << endl;
@@ -113,9 +97,12 @@ void Trip::runTrip(vector<TripLeg> &legs)
 				mVehicle.fillTank();
 				mGStationCnt++;
 
-				cout << "---Gas Stop: " << mGStationCnt << " Leg: " << i
-						<< " leg Travelled: " << legTravelled << endl;
+				cout << "---Gas Stop: " << mGStationCnt << "	Leg: " << i
+						<< "	leg Travelled: " << legTravelled << endl;
 			}
+
+			cout << "-----Gas Station: " << gasStations << "	Mile: " << milesTravelled;
+			gasStations++;
 
 			// Update current local travel and getVehicle tank
 			if (isNextStationInLeg) {
@@ -128,8 +115,8 @@ void Trip::runTrip(vector<TripLeg> &legs)
 				mVehicle.consumeFuel(remainder / mpg);
 			}
 
-			cout << "-----Leg: " << i << " Leg Travelled: " << legTravelled
-					<< " Tank: " << mVehicle.getCurrentFuel() << endl;
+			cout << "	Leg: " << i << "	Leg Travelled: " << legTravelled
+					<< "	Tank: " << mVehicle.getCurrentFuel() << endl;
 		}
 
 		// End of tripleg calculations
@@ -156,10 +143,6 @@ void Trip::runTrip(vector<TripLeg> &legs)
 			<< " Total Miles = " << mCityMiles + mHighwayMiles << endl << endl;
 }
 
-
-//==============================================================================
-
-
 void Trip::printTripDetails()
 {
 	// Calculations for centering title
@@ -179,8 +162,8 @@ void Trip::printTripDetails()
 	cout << mVehicle.getMake() << " " << mVehicle.getModel() 		   << endl;
 	cout << "--------------------------------------------------------" << endl;
 	cout << left << fixed << setprecision(2);
-	cout << "Tank Size = " << setw(9) << mVehicle.getTankSize();
-	cout << "City MPG = " << setw(8) << mVehicle.getCityMPG();
+	cout << "Tank Size = " << setw(6) << mVehicle.getTankSize();
+	cout << "gal   City MPG = " << setw(5) << mVehicle.getCityMPG();
 	cout << "Highway MPG = " << mVehicle.getHighwayMPG() << endl;;
 	cout << "--------------------------------------------------------" << endl;
 	cout << "Trip time(minutes) = " << setw(7) << mTripTime;
@@ -191,11 +174,12 @@ void Trip::printTripDetails()
 	cout << "Trip cost based on fuel added = $" << calcGasCost(true) << endl;
 	cout << "Trip cost based on fuel used  = $" << calcGasCost(false) << endl;
 	cout << "--------------------------------------------------------" << endl;
-	cout << "Fuel added = " << setw(15) << setprecision(4) << mFuelPurchased;
-	cout << "Fuel remaining = "
-			<< mVehicle.getTankSize() - mVehicle.getCurrentFuel() << endl;
-	cout << "Fuel used  = " << setw(15) << mFuelConsumed;
-	cout << "Fuel stops     = " << mGStationCnt << endl;
+	cout << "Fuel added = " << setw(8) << setprecision(4)
+			<< mFuelPurchased << "gal    Fuel remaining = "
+			<< mVehicle.getTankSize() - mVehicle.getCurrentFuel()
+			<< " gal" << endl;
+	cout << "Fuel used  = " << setw(8) << mFuelConsumed;
+	cout << "gal    Fuel stops     = " << mGStationCnt << endl << endl << endl;
 }
 
 
