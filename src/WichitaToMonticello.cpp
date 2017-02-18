@@ -390,7 +390,7 @@ void tripTesting()
 {
 	// Test Case 1 - Confirmed
 	// Vehicle travels 1 trip leg containing 1 gas station, no refuel
-	Vehicle v1("Actual", "", 1, 1,
+	Vehicle v1("Actual:", "", 1, 1,
 			2, 		// Tank size
 			15, 	// cityMPG
 			30);
@@ -404,7 +404,7 @@ void tripTesting()
 
 	// Test Case 2 - Confirmed
 	// Vehicle travels 1 trip leg containing 1 gas station, need to refuel 1 time
-	Vehicle v2("Actual", "", 1, 1,
+	Vehicle v2("Actual:", "", 1, 1,
 			1.75, 	// Tank size
 			10, 	// cityMPG
 			30);	// HighwayMPG
@@ -437,7 +437,7 @@ void tripTesting()
 
 	// Test Case 3 - Confirmed
 	// Vehicle travels 1 trip leg containing 3 gas stations, need to refuel 1 time
-	Vehicle v3("Actual", "", 1, 1,
+	Vehicle v3("Actual:", "", 1, 1,
 			3.5, 	// Tank size
 			10, 	// cityMPG
 			30);	// HighwayMPG
@@ -462,7 +462,7 @@ void tripTesting()
 			120, 	// Trip Time
 			7.5, 	// Fuel Added Cost
 			12.5,	// Fuel Used Cost
-			2,	 	// Fuel Added
+			3,	 	// Fuel Added
 			5, 		// Fuel Used
 			1.5, 	// Fuel Remaining
 			1);		// Fuel Stops
@@ -470,7 +470,7 @@ void tripTesting()
 
 	// Test Case 4 - Confirmed
 	// Vehicle travels 1 trip leg containing 4 gas stations, need to refuel 2 times
-	Vehicle v4("Actual", "", 1, 1,
+	Vehicle v4("Actual:", "", 1, 1,
 			3.6, 	// Tank size
 			10, 	// cityMPG
 			30);	// HighwayMPG
@@ -501,7 +501,7 @@ void tripTesting()
 			2);		// Fuel Stops
 	printVehicleStats(t4);
 
-	// Test Case 5
+	// Test Case 5 - Confirmed
 	// Vehicle travels city 2 trip legs containing 2 gas station each, need to refuel 2 times
 	Vehicle v5("Actual:", "", 1, 1,
 			4.5, 	// Tank size
@@ -534,6 +534,113 @@ void tripTesting()
 			3.3, 	// Fuel Remaining
 			2);		// Fuel Stops
 	printVehicleStats(t5);
+
+	// Test Case 6 - Confirmed
+	// Vehicle travels city 2 trip legs containing 2 gas station each, need to refuel 2 times
+	// One Trip leg is City, the other Highway
+	Vehicle v6("Actual:", "", 1, 1,
+			2.4, 	// Tank size
+			10, 	// cityMPG
+			20);	// HighwayMPG
+	vector<TripLeg> l6;
+	l6.push_back(TripLeg(50, TripLeg::CITY));
+	l6.push_back(TripLeg(50, TripLeg::HIGHWAY));	// Trip is 100 miles
+	Parameters p6(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			2, 		// Awake Time
+			22);	// Station every 22 miles
+	VehicleTrip t6(v6, p6);
+	t6.runTrip(l6);
+	printExpectedStats(
+			6, 		// Test Case
+			2.4, 	// Tank Size
+			10, 	// CityMPG
+			20, 	// HighwayMPG
+			235, 	// Trip Time
+			14.5, 	// Fuel Added Cost
+			18.75,		// Fuel Used Cost
+			5.8,	// Fuel Added
+			7.5, 	// Fuel Used
+			.7, 	// Fuel Remaining
+			3);		// Fuel Stops
+	printVehicleStats(t6);
+
+	// Test Case 7 - Confirmed
+	// Vehicle travels city 2 trip legs containing 2 gas station each, need to refuel 2 times
+	// One Trip leg is City, the other Highway
+	Vehicle v7("Actual:", "", 1, 1,
+			2.6, 	// Tank size
+			10, 	// cityMPG
+			20);	// HighwayMPG
+	vector<TripLeg> l7;
+	l7.push_back(TripLeg(50, TripLeg::CITY));
+	l7.push_back(TripLeg(50, TripLeg::HIGHWAY));	// Trip is 100 miles
+	Parameters p7(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			2, 		// Awake Time
+			22);	// Station every 22 miles
+	VehicleTrip t7(v7, p7);
+	t7.runTrip(l7);
+	printExpectedStats(
+			7, 		// Test Case
+			2.6, 	// Tank Size
+			10, 	// CityMPG
+			20, 	// HighwayMPG
+			235, 	// Trip Time
+			17.25, 	// Fuel Added Cost
+			18.75,		// Fuel Used Cost
+			6.9,	// Fuel Added
+			7.5, 	// Fuel Used
+			2, 	// Fuel Remaining
+			3);		// Fuel Stops
+	printVehicleStats(t7);
+
+	// Test Case 8 - Confirmed
+	// Vehicle travels multiple roadtypes and trip legs to test more realistic trip
+	Vehicle v8("Actual:", "", 1, 1,
+			1.12, 	// Tank size
+			10, 	// cityMPG
+			20);	// HighwayMPG
+	vector<TripLeg> l8;
+	l8.push_back(TripLeg(2.5, 	TripLeg::CITY));
+	l8.push_back(TripLeg(3, 	TripLeg::CITY));
+	l8.push_back(TripLeg(14.5, 	TripLeg::HIGHWAY));
+	l8.push_back(TripLeg(20, 	TripLeg::HIGHWAY));
+	l8.push_back(TripLeg(10, 	TripLeg::CITY));	// Trip is 50 miles
+	Parameters p8(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			1, 		// Awake Time
+			11);	// Station every 11 miles
+	VehicleTrip t8(v8, p8);
+	t8.runTrip(l8);
+	printExpectedStats(
+			8, 		// Test Case
+			1.12, 	// Tank Size
+			10, 	// CityMPG
+			20, 	// HighwayMPG
+			151, 	// Trip Time
+			6.69, 	// Fuel Added Cost
+			8.19,		// Fuel Used Cost
+			2.675,	// Fuel Added
+			3.275, 	// Fuel Used
+			.52, 	// Fuel Remaining
+			3);		// Fuel Stops
+	printVehicleStats(t8);
 }
 
 void printExpectedStats(int testCase, double tankSize, int cityMPG, int highwayMPG, int tripTime, double fuelAddedCost,

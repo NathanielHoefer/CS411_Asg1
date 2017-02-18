@@ -57,24 +57,24 @@ private:
 //	Calculates the drive time within a given set of miles
 //		Preconditions: Road type either City or Highway
 //		Returns: The minutes taken to drive the amount of miles
-	int calcDriveTime(double miles, TripLeg::RoadType roadType);
+	double calcDriveTime(double miles, TripLeg::RoadType roadType);
 
 //	Calculates the time taken to refuel based on # of gas stations
 //		Preconditions: Refuel time in minutes
 //		Returns: The minutes taken to refuel during trip
-	int calcRefuelTime();
+	double calcRefuelTime();
 
 //	Calculates the total restroom time on the trip based on the # of gas
 //		stations.
 //		Preconditions: Restroom time is in minutes
 //		Returns: The minutes taken to use the restroom during the trip
-	int calcRestroomTime();
+	double calcRestroomTime();
 
 //	Calculates the total sleep time on the trip based on the # of gas
 //		stations.
 //		Preconditions: Sleep time is in minutes
 //		Returns: The minutes taken to use the sleep during the trip
-	int calcSleepTime();
+	double calcSleepTime();
 
 //	Increases the total fuel consumed taking into account the road type
 //		Preconditions: Fuel consumed is in gallons

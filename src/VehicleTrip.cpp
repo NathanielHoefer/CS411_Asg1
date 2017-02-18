@@ -42,38 +42,30 @@ int 	VehicleTrip::getGStationCount() 	{ return mGStationCnt; }
 void VehicleTrip::runTrip(vector<TripLeg> &legs)
 {
 
-	double milesTravelled = 0;
-	double gasDistance = mParms.getGasDistance();
+	double milesUntilStation = 0;
+	double gasDistance = mParms.getGasDistance();	// Distance between each station
 
-	int gasStations = 0;
-
+	// Process each trip leg
 	for (int i = 0; i < (int)legs.size(); i++) {
-
-		cout << "Leg: " << i+1;
 
 		// Sets MPG for the trip leg
 		int mpg = mVehicle.getMPG(legs.at(i).getRoadType());
 		double legDistance = legs.at(i).getDistance();
 		TripLeg::RoadType roadType = legs.at(i).getRoadType();
 
-		cout << "	  MPG: " << mpg;
-
-
 		// Sets to remaining miles until gas station
 		double legTravelled;		// The miles travelled in the current leg
 
-		if (milesTravelled > legDistance) {
+		// Is station in next leg?
+		if (milesUntilStation > legDistance) {
 			legTravelled = legDistance;
+			milesUntilStation -= legDistance;
 		} else {
-			legTravelled = milesTravelled;
+			legTravelled = milesUntilStation;
 		}
 
 		mVehicle.consumeFuel(legTravelled / mpg);
 		bool isNextStationInLeg = true;
-
-		cout << "	legTravelled: " << setw(7) << legTravelled << "	Tank: "
-				<< mVehicle.getCurrentFuel() << endl;
-
 
 		// Travel until end of leg
 		while (legTravelled < legDistance) {
@@ -93,17 +85,10 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 
 			// Stopping at gas station if needed
 			if (fueltoStation > mVehicle.getCurrentFuel()) {
-				cout << "-------Before Refuel Tank: " << mVehicle.getCurrentFuel() << endl;
 				increaseFuelPurchased();
 				mVehicle.fillTank();
 				mGStationCnt++;
-
-				cout << "---Gas Stop: " << mGStationCnt << "	Leg: " << i
-						<< "	leg Travelled: " << legTravelled << endl;
 			}
-
-			cout << "-----Gas Station: " << gasStations << "	Mile: " << milesTravelled;
-			gasStations++;
 
 			// Update current local travel and getVehicle tank
 			if (isNextStationInLeg) {
@@ -112,12 +97,9 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 			} else {
 				double remainder = legDistance - legTravelled;
 				legTravelled += remainder;
-				milesTravelled = gasDistance - remainder;
+				milesUntilStation = gasDistance - remainder;
 				mVehicle.consumeFuel(remainder / mpg);
 			}
-
-			cout << "	Leg: " << i << "	Leg Travelled: " << legTravelled
-					<< "	Tank: " << mVehicle.getCurrentFuel() << endl;
 		}
 
 		// End of tripleg calculations
@@ -132,19 +114,11 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 
 	// Calculate Total Time
 	int refuelTime, restroomTime, sleepTime;
-	refuelTime = calcRefuelTime();
-	restroomTime = calcRestroomTime();
-	sleepTime = calcSleepTime();
-
-
+	refuelTime = round(calcRefuelTime());
+	restroomTime = round(calcRestroomTime());
+	sleepTime = round(calcSleepTime());
 
 	mTripTime = mDriveTime + refuelTime + restroomTime + sleepTime;
-
-	cout << "TripT = " << mTripTime << " RefuelT = " << refuelTime << " RestRT = "
-			<< restroomTime << " SleepT = " << sleepTime << endl;
-
-	cout << "City Miles = " << mCityMiles << " Highway Miles = " << mHighwayMiles
-			<< " Total Miles = " << mCityMiles + mHighwayMiles << endl << endl;
 }
 
 std::ostream & operator <<(std::ostream &lhs, VehicleTrip &rhs)
@@ -170,7 +144,7 @@ std::ostream & operator <<(std::ostream &lhs, VehicleTrip &rhs)
 	return lhs;
 }
 
-int VehicleTrip::calcDriveTime(double miles, TripLeg::RoadType roadType)
+double VehicleTrip::calcDriveTime(double miles, TripLeg::RoadType roadType)
 {
 	int mph;
 	if (roadType == TripLeg::CITY) {
@@ -181,17 +155,17 @@ int VehicleTrip::calcDriveTime(double miles, TripLeg::RoadType roadType)
 	return (miles / mph) * 60;
 }
 
-int VehicleTrip::calcRefuelTime()
+double VehicleTrip::calcRefuelTime()
 {
 	return mGStationCnt * mParms.getRefuelTime();
 }
 
-int VehicleTrip::calcRestroomTime()
+double VehicleTrip::calcRestroomTime()
 {
 	return (mGStationCnt / 2) * mParms.getRestroomTime();
 }
 
-int VehicleTrip::calcSleepTime()
+double VehicleTrip::calcSleepTime()
 {
 	int numOfNaps = mDriveTime / mParms.getAwakeTime();
 
@@ -199,7 +173,6 @@ int VehicleTrip::calcSleepTime()
 	if (numOfNaps != 0 && numOfNaps % mParms.getNapTime() == 0)
 		numOfNaps--;
 
-	cout << "Awake Time = " << mParms.getAwakeTime() << " Number of naps = " << numOfNaps << " Nap Time = " << mParms.getNapTime() << endl;
 	return numOfNaps * mParms.getNapTime();
 }
 
