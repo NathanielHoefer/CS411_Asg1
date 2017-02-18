@@ -2,8 +2,12 @@
 // Assignment 1 - VehicleTrip Class
 //==============================================================================
 /*
+    File: VehicleTrip.hpp
+    Project: Assignment 1
     Author: Nathaniel Hoefer
     Student ID: X529U639
+    Class: CS411 - Spring 2017
+	Date: 2/18/2017
 
 ******************************************************************************/
 
@@ -14,6 +18,8 @@
 #include "Vehicle.hpp"
 #include "Parameters.hpp"
 #include <vector>
+#include <math.h>
+#include <sstream>
 
 class VehicleTrip
 {

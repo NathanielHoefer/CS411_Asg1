@@ -2,8 +2,12 @@
 // Assignment 1 - Trip Leg
 //==============================================================================
 /*
+	File: TripLeg.hpp
+    Project: Assignment 1
     Author: Nathaniel Hoefer
     Student ID: X529U639
+    Class: CS411 - Spring 2017
+	Date: 2/18/2017
 
 ******************************************************************************/
 

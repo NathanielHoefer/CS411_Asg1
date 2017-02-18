@@ -2,15 +2,23 @@
 // Assignment 1 - WichitaToMonticello
 //==============================================================================
 /*
+    File: WichitaToMonticello.cpp
+    Project: Assignment 1
     Author: Nathaniel Hoefer
     Student ID: X529U639
+    Class: CS411 - Spring 2017
+	Date: 2/18/2017
 
     Simulates a trip from Wichita to Monticello with a number of vehicles to
     determine which vehicles take the least/most time, require the least/most
     fuel purchased, and require the least/most consumed.
 
+    Notes: Input values have not been fully checked for values ranging far beyond
+    reasonable values since it was not explicitly mentioned in the rubric.
+
 ******************************************************************************/
 
+#include "VehicleTrip.hpp"
 #include "TripLeg.hpp"
 #include "Vehicle.hpp"
 #include <string>
@@ -19,8 +27,6 @@
 #include <sstream>
 #include <vector>
 #include <stdlib.h>
-
-#include "VehicleTrip.hpp"
 
 using namespace std;
 
@@ -36,49 +42,52 @@ void printExpectedStats(int testCase, double tankSize, int cityMPG, int highwayM
 		double fuelUsedCost, double fuelAdded, double fuelUsed, double fuelRemaining, int fuelStops);
 void tripTesting();
 
+
 int main()
 {
-	cout << "Assignment 1" << endl << endl;
+	cout << "========================================================" << endl;
+	cout << "           Wichita to Monticello - Assignment 1         " << endl;
+	cout << "========================================================" << endl;
 
-	tripTesting();
+//	tripTesting();	// Used for running test cases
 
-//	vector<Vehicle> vehicles = initializeVehicles();
-//	vector<TripLeg> tripLegs = initializeTripLegs();
-//	Parameters parms = initializeParms();
-//
-//	VehicleTrip initialTrip(vehicles.at(0), parms);
-//	initialTrip.runTrip(tripLegs);
-//
-//	// Initializes records
-//	VehicleTrip shortestTime = 	initialTrip;
-//	VehicleTrip longestTime = 	initialTrip;
-//	VehicleTrip leastFuelAdded = initialTrip;
-//	VehicleTrip mostFuelAdded = initialTrip;
-//	VehicleTrip leastFuelUsed = initialTrip;
-//	VehicleTrip mostFuelUsed = 	initialTrip;
-//
-//	// Process each vehicle trip
-//	for (int i = 1; i < (int)vehicles.size(); i++) {
-//		VehicleTrip trip(vehicles.at(i), parms);
-//		trip.runTrip(tripLegs);
-//
-//		// Updates records
-//		if (trip.getTripTime() < shortestTime.getTripTime())
-//			shortestTime = trip;
-//		if (trip.getTripTime() > longestTime.getTripTime())
-//			longestTime = trip;
-//		if (trip.getFuelPurchased() < leastFuelAdded.getFuelPurchased())
-//			leastFuelAdded = trip;
-//		if (trip.getFuelPurchased() > mostFuelAdded.getFuelPurchased())
-//			mostFuelAdded = trip;
-//		if (trip.getFuelConsumed() < leastFuelUsed.getFuelConsumed())
-//			leastFuelUsed = trip;
-//		if (trip.getFuelConsumed() > mostFuelUsed.getFuelConsumed())
-//			mostFuelUsed = trip;
-//	}
-//
-//	// Print the formatted results
-//	printResults(shortestTime, longestTime, leastFuelAdded, mostFuelAdded, leastFuelUsed, mostFuelUsed);
+	vector<Vehicle> vehicles = initializeVehicles();
+	vector<TripLeg> tripLegs = initializeTripLegs();
+	Parameters parms = initializeParms();
+
+	VehicleTrip initialTrip(vehicles.at(0), parms);
+	initialTrip.runTrip(tripLegs);
+
+	// Initializes records
+	VehicleTrip shortestTime = 	initialTrip;
+	VehicleTrip longestTime = 	initialTrip;
+	VehicleTrip leastFuelAdded = initialTrip;
+	VehicleTrip mostFuelAdded = initialTrip;
+	VehicleTrip leastFuelUsed = initialTrip;
+	VehicleTrip mostFuelUsed = 	initialTrip;
+
+	// Process each vehicle trip
+	for (int i = 1; i < (int)vehicles.size(); i++) {
+		VehicleTrip trip(vehicles.at(i), parms);
+		trip.runTrip(tripLegs);
+
+		// Updates records
+		if (trip.getTripTime() < shortestTime.getTripTime())
+			shortestTime = trip;
+		if (trip.getTripTime() > longestTime.getTripTime())
+			longestTime = trip;
+		if (trip.getFuelPurchased() < leastFuelAdded.getFuelPurchased())
+			leastFuelAdded = trip;
+		if (trip.getFuelPurchased() > mostFuelAdded.getFuelPurchased())
+			mostFuelAdded = trip;
+		if (trip.getFuelConsumed() < leastFuelUsed.getFuelConsumed())
+			leastFuelUsed = trip;
+		if (trip.getFuelConsumed() > mostFuelUsed.getFuelConsumed())
+			mostFuelUsed = trip;
+	}
+
+	// Print the formatted results
+	printResults(shortestTime, longestTime, leastFuelAdded, mostFuelAdded, leastFuelUsed, mostFuelUsed);
 }
 
 // Creates the vehicle objects
@@ -188,14 +197,13 @@ Parameters initializeParms()
 		cout << " - Time required to take a nap (minutes) [15]: ";
 		napTime = (int)requestInput(NAP_TIME);
 		cout << " - Time before requiring sleep (hours) [8]: ";
-		awakeTime = (int)requestInput(AWAKE_TIME);
+		awakeTime = round(requestInput(AWAKE_TIME));
 
 		cout << "\n--------------------------------------------------------"
 				<< endl << endl;
 
 		// Verifies input with user
 		while (!isApproved) {
-			cout << "Are the following parameters correct? (Y/N)" << endl;
 			cout << left << setw(13) << "City MPH:" << right
 					<< setfill('0') << setw(2) << cityMPH
 					<< setfill(' ') << setw(3) << "";
@@ -217,6 +225,7 @@ Parameters initializeParms()
 			cout << left << setw(30) << "Gas Station Distance (miles): "
 					<< fixed << setprecision(1) << setw(9) << gasDistance
 					<< "Fuel Price: $" << setprecision(2) << fuelPrice << endl;
+			cout << " - Are the entered parameters correct? (Y/N)" << endl;
 
 			getline(cin, input);
 
@@ -285,30 +294,30 @@ void printResults(VehicleTrip shortestTime, VehicleTrip longestTime,
 	printVehicleStats(shortestTime);
 
 	cout << "========================================================" << endl;
-	cout << "   2. Vehicle arriving last at Jefferson’s Monticello:  " << endl;
+	cout << "   2. Vehicle arriving last at Jefferson's Monticello: " << endl;
 	cout << "========================================================" << endl;
 	printVehicleStats(longestTime);
 
 	cout << "========================================================" << endl;
-	cout << "   3. Vehicle costing the least to reach Jefferson’s    " << endl;
+	cout << "   3. Vehicle costing the least to reach Jefferson's    " << endl;
 	cout << "        Monticello based on fuel added to tank:         " << endl;
 	cout << "========================================================" << endl;
 	printVehicleStats(leastFuelAdded);
 
 	cout << "========================================================" << endl;
-	cout << "   4. Vehicle costing the most to reach Jefferson’s     " << endl;
+	cout << "   4. Vehicle costing the most to reach Jefferson's     " << endl;
 	cout << "        Monticello based on fuel added to tank:         " << endl;
 	cout << "========================================================" << endl;
 	printVehicleStats(mostFuelAdded);
 
 	cout << "========================================================" << endl;
-	cout << "   5. Vehicle costing the least to reach Jefferson’s    " << endl;
+	cout << "   5. Vehicle costing the least to reach Jefferson's    " << endl;
 	cout << "         Monticello based on actual fuel used:          " << endl;
 	cout << "========================================================" << endl;
 	printVehicleStats(leastFuelUsed);
 
 	cout << "========================================================" << endl;
-	cout << "   6. Vehicle costing the most to reach Jefferson’s     " << endl;
+	cout << "   6. Vehicle costing the most to reach Jefferson's     " << endl;
 	cout << "         Monticello based on actual fuel used:          " << endl;
 	cout << "========================================================" << endl;
 	printVehicleStats(mostFuelUsed);

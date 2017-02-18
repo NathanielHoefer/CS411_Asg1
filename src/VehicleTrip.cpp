@@ -2,19 +2,16 @@
 // Assignment 1 - VehicleTrip Class
 //==============================================================================
 /*
+    File: VehicleTrip.cpp
+    Project: Assignment 1
     Author: Nathaniel Hoefer
     Student ID: X529U639
+    Class: CS411 - Spring 2017
+	Date: 2/18/2017
 
 ******************************************************************************/
 
 #include "VehicleTrip.hpp"
-
-#include <math.h>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-
-using namespace std;
 
 VehicleTrip::VehicleTrip(Vehicle &vehicle, Parameters &parms)
 {
@@ -39,7 +36,7 @@ int 	VehicleTrip::getDriveTime() 		{ return mDriveTime; }
 int 	VehicleTrip::getTripTime()			{ return mTripTime; }
 int 	VehicleTrip::getGStationCount() 	{ return mGStationCnt; }
 
-void VehicleTrip::runTrip(vector<TripLeg> &legs)
+void VehicleTrip::runTrip(std::vector<TripLeg> &legs)
 {
 
 	double milesUntilStation = 0;
@@ -55,29 +52,31 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 
 		// Sets to remaining miles until gas station
 		double legTravelled;		// The miles travelled in the current leg
+		bool isStationInLeg;
 
 		// Is station in next leg?
 		if (milesUntilStation > legDistance) {
 			legTravelled = legDistance;
 			milesUntilStation -= legDistance;
+			isStationInLeg = false;
 		} else {
 			legTravelled = milesUntilStation;
+			isStationInLeg = true;
 		}
 
 		mVehicle.consumeFuel(legTravelled / mpg);
-		bool isNextStationInLeg = true;
 
 		// Travel until end of leg
 		while (legTravelled < legDistance) {
 
 			// Station in next leg?
 			if ((legTravelled + gasDistance) > legDistance) {
-				isNextStationInLeg = false;
+				isStationInLeg = false;
 			}
 
 			// Will it make it to the next gas station?
 			double fueltoStation;
-			if (isNextStationInLeg) {
+			if (isStationInLeg) {
 				fueltoStation = mVehicle.calcFuelConsumed(gasDistance, roadType);
 			} else {
 				fueltoStation = calcFuelUntilStation(legs, i, legTravelled);
@@ -91,7 +90,7 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 			}
 
 			// Update current local travel and getVehicle tank
-			if (isNextStationInLeg) {
+			if (isStationInLeg) {
 				legTravelled += gasDistance;
 				mVehicle.consumeFuel(gasDistance / mpg);
 			} else {
@@ -117,7 +116,6 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 	refuelTime = round(calcRefuelTime());
 	restroomTime = round(calcRestroomTime());
 	sleepTime = round(calcSleepTime());
-
 	mTripTime = mDriveTime + refuelTime + restroomTime + sleepTime;
 }
 
@@ -187,13 +185,12 @@ void VehicleTrip::increaseFuelPurchased()
 	mFuelPurchased += mVehicle.getTankSize() - mVehicle.getCurrentFuel();
 }
 
-double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs, int currLeg, double legTravelled)
+double VehicleTrip::calcFuelUntilStation(std::vector<TripLeg> &tripLegs, int currLeg, double legTravelled)
 {
 	double cityMiles, highwayMiles;
-	cityMiles = highwayMiles = 0;
-	TripLeg::RoadType type = tripLegs.at(currLeg).getRoadType();
-
 	double gasDist = mParms.getGasDistance();
+	TripLeg::RoadType type = tripLegs.at(currLeg).getRoadType();
+	cityMiles = highwayMiles = 0;
 
 	// Add remaining miles in current trip
 	if (type == TripLeg::CITY) {
@@ -208,6 +205,7 @@ double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs, int currLeg,
 		TripLeg::RoadType type = tripLegs.at(i).getRoadType();
 		double distance = cityMiles + highwayMiles;
 
+		// Is gas station not reached in current leg?
 		if (distance < gasDist) {
 			// Gas station is in current trip leg
 			if ((distance + tripDist) > gasDist) {
