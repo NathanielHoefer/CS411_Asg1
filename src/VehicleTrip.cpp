@@ -136,9 +136,12 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 	restroomTime = calcRestroomTime();
 	sleepTime = calcSleepTime();
 
-	cout << "RefuelT = " << refuelTime << " RestRT = " << restroomTime << " SleepT = " << sleepTime << endl;
+
 
 	mTripTime = mDriveTime + refuelTime + restroomTime + sleepTime;
+
+	cout << "TripT = " << mTripTime << " RefuelT = " << refuelTime << " RestRT = "
+			<< restroomTime << " SleepT = " << sleepTime << endl;
 
 	cout << "City Miles = " << mCityMiles << " Highway Miles = " << mHighwayMiles
 			<< " Total Miles = " << mCityMiles + mHighwayMiles << endl << endl;
@@ -185,7 +188,7 @@ int VehicleTrip::calcRefuelTime()
 
 int VehicleTrip::calcRestroomTime()
 {
-	return (mGStationCnt * mParms.getRestroomTime()) / 2;
+	return (mGStationCnt / 2) * mParms.getRestroomTime();
 }
 
 int VehicleTrip::calcSleepTime()

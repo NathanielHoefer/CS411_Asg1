@@ -32,64 +32,53 @@ double requestInput(double defaultVal);
 void printResults(VehicleTrip shortestTime, VehicleTrip longestTime, VehicleTrip leastFuelAdded,
 				VehicleTrip mostFuelAdded, VehicleTrip leastFuelUsed, VehicleTrip mostFuelUsed);
 void printVehicleStats(VehicleTrip trip);
+void printExpectedStats(int testCase, double tankSize, int cityMPG, int highwayMPG, int tripTime, double fuelAddedCost,
+		double fuelUsedCost, double fuelAdded, double fuelUsed, double fuelRemaining, int fuelStops);
 void tripTesting();
 
 int main()
 {
 	cout << "Assignment 1" << endl << endl;
 
-	vector<Vehicle> vehicles = initializeVehicles();
-	vector<TripLeg> tripLegs = initializeTripLegs();
-	Parameters parms = initializeParms();
+	tripTesting();
 
-	VehicleTrip initialTrip(vehicles.at(0), parms);
-	initialTrip.runTrip(tripLegs);
-
-	// Initializes records
-	VehicleTrip shortestTime = 	initialTrip;
-	VehicleTrip longestTime = 	initialTrip;
-	VehicleTrip leastFuelAdded = initialTrip;
-	VehicleTrip mostFuelAdded = initialTrip;
-	VehicleTrip leastFuelUsed = initialTrip;
-	VehicleTrip mostFuelUsed = 	initialTrip;
-
-	// Process each vehicle trip
-	for (int i = 1; i < (int)vehicles.size(); i++) {
-		VehicleTrip trip(vehicles.at(i), parms);
-		trip.runTrip(tripLegs);
-
-		// Updates records
-		if (trip.getTripTime() < shortestTime.getTripTime())
-			shortestTime = trip;
-		if (trip.getTripTime() > longestTime.getTripTime())
-			longestTime = trip;
-		if (trip.getFuelPurchased() < leastFuelAdded.getFuelPurchased())
-			leastFuelAdded = trip;
-		if (trip.getFuelPurchased() > mostFuelAdded.getFuelPurchased())
-			mostFuelAdded = trip;
-		if (trip.getFuelConsumed() < leastFuelUsed.getFuelConsumed())
-			leastFuelUsed = trip;
-		if (trip.getFuelConsumed() > mostFuelUsed.getFuelConsumed())
-			mostFuelUsed = trip;
-	}
-
-	// Print the formatted results
-	printResults(shortestTime, longestTime, leastFuelAdded, mostFuelAdded, leastFuelUsed, mostFuelUsed);
-}
-
-// Function used for testing scenarios
-void tripTesting()
-{
-	// Initialization
-	Vehicle vehicle("Chevrolet", "Spark", 1.2, 4, 1.7, 8, 14);
-	vector<TripLeg> tripLegs;
-	tripLegs.push_back(TripLeg(3.3, TripLeg::CITY));
-	tripLegs.push_back(TripLeg(23.2, TripLeg::HIGHWAY));
-	tripLegs.push_back(TripLeg(14.6, TripLeg::CITY));
-	Parameters parms(25, 80, 2.19, 20, 10, 15, 8*60, 10);
-	VehicleTrip trip(vehicle, parms);
-
-	trip.runTrip(tripLegs);
+//	vector<Vehicle> vehicles = initializeVehicles();
+//	vector<TripLeg> tripLegs = initializeTripLegs();
+//	Parameters parms = initializeParms();
+//
+//	VehicleTrip initialTrip(vehicles.at(0), parms);
+//	initialTrip.runTrip(tripLegs);
+//
+//	// Initializes records
+//	VehicleTrip shortestTime = 	initialTrip;
+//	VehicleTrip longestTime = 	initialTrip;
+//	VehicleTrip leastFuelAdded = initialTrip;
+//	VehicleTrip mostFuelAdded = initialTrip;
+//	VehicleTrip leastFuelUsed = initialTrip;
+//	VehicleTrip mostFuelUsed = 	initialTrip;
+//
+//	// Process each vehicle trip
+//	for (int i = 1; i < (int)vehicles.size(); i++) {
+//		VehicleTrip trip(vehicles.at(i), parms);
+//		trip.runTrip(tripLegs);
+//
+//		// Updates records
+//		if (trip.getTripTime() < shortestTime.getTripTime())
+//			shortestTime = trip;
+//		if (trip.getTripTime() > longestTime.getTripTime())
+//			longestTime = trip;
+//		if (trip.getFuelPurchased() < leastFuelAdded.getFuelPurchased())
+//			leastFuelAdded = trip;
+//		if (trip.getFuelPurchased() > mostFuelAdded.getFuelPurchased())
+//			mostFuelAdded = trip;
+//		if (trip.getFuelConsumed() < leastFuelUsed.getFuelConsumed())
+//			leastFuelUsed = trip;
+//		if (trip.getFuelConsumed() > mostFuelUsed.getFuelConsumed())
+//			mostFuelUsed = trip;
+//	}
+//
+//	// Print the formatted results
+//	printResults(shortestTime, longestTime, leastFuelAdded, mostFuelAdded, leastFuelUsed, mostFuelUsed);
 }
 
 // Creates the vehicle objects
@@ -229,7 +218,6 @@ Parameters initializeParms()
 					<< fixed << setprecision(1) << setw(9) << gasDistance
 					<< "Fuel Price: $" << setprecision(2) << fuelPrice << endl;
 
-			// TODO Windows will only accept string as "Y\r"
 			getline(cin, input);
 
 			if (input == "Y" || input == "y") {
@@ -392,7 +380,194 @@ void printVehicleStats(VehicleTrip trip)
 	cout << "Trip cost based on fuel used  = $" << fuelConsumedCost << endl;
 	cout << "--------------------------------------------------------" << endl;
 	cout << "Fuel added = " << setw(8) << setprecision(4) << fuelPurchased
-			<< "gal    Fuel remaining = " << tankSize - currentFuel << " gal" << endl;
+			<< "gal    Fuel remaining = " << currentFuel << " gal" << endl;
 	cout << "Fuel used  = " << setw(8) << fuelConsumed;
 	cout << "gal    Fuel stops     = " << gStationCnt << endl << endl << endl;
+}
+
+// Function used for testing scenarios
+void tripTesting()
+{
+	// Test Case 1 - Confirmed
+	// Vehicle travels 1 trip leg containing 1 gas station, no refuel
+	Vehicle v1("Actual", "", 1, 1,
+			2, 		// Tank size
+			15, 	// cityMPG
+			30);
+	vector<TripLeg> l1;
+	l1.push_back(TripLeg(20, TripLeg::CITY));			// Trip is 20 miles
+	Parameters p1(30, 60, 2.5, 20, 10, 15, 8, 15);		// Station every 15 miles
+	VehicleTrip t1(v1, p1);
+	t1.runTrip(l1);
+	printExpectedStats(1, 2, 15, 30, 40, 0, 3.33, 0, 1.3333, .6666, 0);
+	printVehicleStats(t1);
+
+	// Test Case 2 - Confirmed
+	// Vehicle travels 1 trip leg containing 1 gas station, need to refuel 1 time
+	Vehicle v2("Actual", "", 1, 1,
+			1.75, 	// Tank size
+			10, 	// cityMPG
+			30);	// HighwayMPG
+	vector<TripLeg> l2;
+	l2.push_back(TripLeg(20, TripLeg::CITY));	// Trip is 20 miles
+	Parameters p2(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			8, 		// Awake Time
+			15);	// Station every 15 miles
+	VehicleTrip t2(v2, p2);
+	t2.runTrip(l2);
+	printExpectedStats(
+			2, 		// Test Case
+			1.75, 	// Tank
+			10, 	// CityMPG
+			30, 	// HighwayMPG
+			60, 	// Trip Time
+			3.75, 	// Fuel Added Cost
+			5, 		// Fuel Used Cost
+			1.5, 	// Fuel Added
+			2, 		// Fuel Used
+			1.25, 	// Fuel Remaining
+			1);		// Fuel Stops
+	printVehicleStats(t2);
+
+	// Test Case 3 - Confirmed
+	// Vehicle travels 1 trip leg containing 3 gas stations, need to refuel 1 time
+	Vehicle v3("Actual", "", 1, 1,
+			3.5, 	// Tank size
+			10, 	// cityMPG
+			30);	// HighwayMPG
+	vector<TripLeg> l3;
+	l3.push_back(TripLeg(50, TripLeg::CITY));	// Trip is 50 miles
+	Parameters p3(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			8, 		// Awake Time
+			15);	// Station every 15 miles
+	VehicleTrip t3(v3, p3);
+	t3.runTrip(l3);
+	printExpectedStats(
+			3, 		// Test Case
+			3.5, 	// Tank Size
+			10, 	// CityMPG
+			30, 	// HighwayMPG
+			120, 	// Trip Time
+			7.5, 	// Fuel Added Cost
+			12.5,	// Fuel Used Cost
+			2,	 	// Fuel Added
+			5, 		// Fuel Used
+			1.5, 	// Fuel Remaining
+			1);		// Fuel Stops
+	printVehicleStats(t3);
+
+	// Test Case 4 - Confirmed
+	// Vehicle travels 1 trip leg containing 4 gas stations, need to refuel 2 times
+	Vehicle v4("Actual", "", 1, 1,
+			3.6, 	// Tank size
+			10, 	// cityMPG
+			30);	// HighwayMPG
+	vector<TripLeg> l4;
+	l4.push_back(TripLeg(70, TripLeg::CITY));	// Trip is 70 miles
+	Parameters p4(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			8, 		// Awake Time
+			15);	// Station every 15 miles
+	VehicleTrip t4(v4, p4);
+	t4.runTrip(l4);
+	printExpectedStats(
+			4, 		// Test Case
+			3.6, 	// Tank Size
+			10, 	// CityMPG
+			30, 	// HighwayMPG
+			190, 	// Trip Time
+			15, 	// Fuel Added Cost
+			17.5,	// Fuel Used Cost
+			6,	 	// Fuel Added
+			7, 		// Fuel Used
+			2.6, 	// Fuel Remaining
+			2);		// Fuel Stops
+	printVehicleStats(t4);
+
+	// Test Case 5
+	// Vehicle travels city 2 trip legs containing 2 gas station each, need to refuel 2 times
+	Vehicle v5("Actual:", "", 1, 1,
+			4.5, 	// Tank size
+			10, 	// cityMPG
+			30);	// HighwayMPG
+	vector<TripLeg> l5;
+	l5.push_back(TripLeg(50, TripLeg::CITY));
+	l5.push_back(TripLeg(50, TripLeg::CITY));	// Trip is 100 miles
+	Parameters p5(
+			30, 	// cityMPH
+			60, 	// highwayMPH
+			2.5, 	// Fuel Cost
+			20, 	// Refuel Time
+			10, 	// Restroom Time
+			15, 	// Nap Time
+			3, 		// Awake Time
+			22);	// Station every 22 miles
+	VehicleTrip t5(v5, p5);
+	t5.runTrip(l5);
+	printExpectedStats(
+			5, 		// Test Case
+			4.5, 	// Tank Size
+			10, 	// CityMPG
+			30, 	// HighwayMPG
+			265, 	// Trip Time
+			22, 	// Fuel Added Cost
+			25,		// Fuel Used Cost
+			8.8,	// Fuel Added
+			10, 	// Fuel Used
+			3.3, 	// Fuel Remaining
+			2);		// Fuel Stops
+	printVehicleStats(t5);
+}
+
+void printExpectedStats(int testCase, double tankSize, int cityMPG, int highwayMPG, int tripTime, double fuelAddedCost,
+		double fuelUsedCost, double fuelAdded, double fuelUsed, double fuelRemaining, int fuelStops)
+{
+	// Calculations for formatted time
+	int days, hours, minutes, remainingTime;
+	remainingTime = tripTime;
+	days = tripTime / (24 * 60);
+	remainingTime = tripTime % (24 * 60);
+	hours = remainingTime / 60;
+	minutes = remainingTime % 60;
+
+	cout << "========================================================" << endl;
+	cout << "                     Test Case: " << testCase 			<< endl;
+	cout << "========================================================" << endl;
+	cout << "                       Expected: " << endl;
+	cout << "--------------------------------------------------------" << endl;
+	cout << left << fixed << setprecision(2);
+	cout << "Tank Size = " << setw(6) << tankSize;
+	cout << "gal   City MPG = " << setw(5) << cityMPG;
+	cout << "Highway MPG = " << highwayMPG << endl;;
+	cout << "--------------------------------------------------------" << endl;
+	cout << "Trip time(minutes) = " << setw(7) << tripTime;
+	cout << "Trip time(d.hh:mm) = " << days << "." << setfill('0') << right
+			<< setw(2) << hours << ":" << setw(2) << minutes << endl;
+	cout << "--------------------------------------------------------" << endl;
+	cout << left << setfill(' ');
+	cout << "Trip cost based on fuel added = $" << fuelAddedCost << endl;
+	cout << "Trip cost based on fuel used  = $" << fuelUsedCost << endl;
+	cout << "--------------------------------------------------------" << endl;
+	cout << "Fuel added = " << setw(8) << setprecision(4) << fuelAdded
+			<< "gal    Fuel remaining = " << fuelRemaining << " gal" << endl;
+	cout << "Fuel used  = " << setw(8) << fuelUsed;
+	cout << "gal    Fuel stops     = " << fuelStops << endl;
+	cout << "========================================================" << endl;
 }
