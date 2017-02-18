@@ -32,12 +32,12 @@ public:
 
 	std::string getMake();
 	std::string getModel();
-	double 	getEngine();
-	int 	getCylinderCount();
-	double 	getTankSize();
-	int 	getCityMPG();
-	int 	getHighwayMPG();
-	double 	getCurrentFuel();
+	double 		getEngine();
+	int 		getCylinderCount();
+	double 		getTankSize();
+	int 		getCityMPG();
+	int 		getHighwayMPG();
+	double 		getCurrentFuel();
 
 //	Calculates the amount of fuel consumed after a number of miles
 //		Preconditions: Entered miles is greater than 0
@@ -61,7 +61,7 @@ public:
 //		Postconditions: None
 	void fillTank();
 
-//	Overloaded << operater to stream out the following:
+//	Overloaded << operater to stream out the following comma delineated:
 //		make << model << tanksize << cityMPG << highwayMPG << currentFuel
 	friend std::ostream & operator <<(std::ostream &lhs, const Vehicle &rhs);
 };

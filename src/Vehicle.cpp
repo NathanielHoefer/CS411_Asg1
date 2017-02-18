@@ -14,27 +14,27 @@ using std::string;
 
 Vehicle::Vehicle()
 {
-	mMake = "Default";
-	mModel = "Default";
-	mEngine = 0.0;
-	mCylinderCnt = 0;
-	mTankSize = 0;
-	mCityMPG = 0;
-	mHighwayMPG = 0;
-	mCurrentFuel = 0;
+	mMake = 		"Default";
+	mModel = 		"Default";
+	mEngine = 		0.0;
+	mCylinderCnt = 	0;
+	mTankSize = 	0;
+	mCityMPG = 		0;
+	mHighwayMPG = 	0;
+	mCurrentFuel = 	0;
 }
 
 Vehicle::Vehicle(string make, string model, double engine, int cylinders,
 			double tankSize, int cityMPG, int highwayMPG)
 {
-	mMake = make;
-	mModel = model;
-	mEngine = engine;
-	mCylinderCnt = cylinders;
-	mTankSize = tankSize;
-	mCityMPG = cityMPG;
-	mHighwayMPG = highwayMPG;
-	mCurrentFuel = tankSize;
+	mMake = 		make;
+	mModel = 		model;
+	mEngine = 		engine;
+	mCylinderCnt = 	cylinders;
+	mTankSize = 	tankSize;
+	mCityMPG = 		cityMPG;
+	mHighwayMPG = 	highwayMPG;
+	mCurrentFuel = 	tankSize;
 }
 
 string 	Vehicle::getMake() 			{ return mMake; }
@@ -54,9 +54,7 @@ double Vehicle::calcFuelConsumed(double miles, TripLeg::RoadType roadType)
 	} else if (roadType == TripLeg::HIGHWAY) {
 		mpg = mHighwayMPG;
 	}
-
 	return miles / mpg;
-
 }
 
 void Vehicle::consumeFuel(double gallons)
@@ -87,6 +85,7 @@ std::ostream & operator <<(std::ostream &lhs, const Vehicle &rhs)
 {
 	std::stringstream stream;
 
+	// Delineates data with commas
 	lhs << rhs.mMake + ",";
 	lhs << rhs.mModel + ",";
 	stream << rhs.mTankSize;

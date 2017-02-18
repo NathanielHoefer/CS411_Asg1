@@ -1,5 +1,5 @@
 //==============================================================================
-// Assignment 1 - Trip Class
+// Assignment 1 - VehicleTrip Class
 //==============================================================================
 /*
     Author: Nathaniel Hoefer
@@ -18,26 +18,26 @@ using namespace std;
 
 VehicleTrip::VehicleTrip(Vehicle &vehicle, Parameters &parms)
 {
-	mParms = parms;
-	mVehicle = vehicle;
+	mParms = 		parms;
+	mVehicle = 		vehicle;
 	mFuelPurchased = 0.0;
 	mFuelConsumed = 0.0;
-	mCityMiles = 0;
+	mCityMiles = 	0;
 	mHighwayMiles = 0;
-	mDriveTime = 0;
-	mGStationCnt = 0;
-	mTripTime = 0;
+	mDriveTime = 	0;
+	mGStationCnt = 	0;
+	mTripTime = 	0;
 }
 
-
+Parameters VehicleTrip::getParms()			{ return mParms; }
 Vehicle VehicleTrip::getVehicle() 			{ return mVehicle; }
 double 	VehicleTrip::getFuelPurchased() 	{ return mFuelPurchased; }
-double 	VehicleTrip::getFuelConsumed() 	{ return mFuelConsumed; }
+double 	VehicleTrip::getFuelConsumed() 		{ return mFuelConsumed; }
 double 	VehicleTrip::getCityMiles() 		{ return mCityMiles; }
 double 	VehicleTrip::getHighwayMiles()		{ return mHighwayMiles; }
 int 	VehicleTrip::getDriveTime() 		{ return mDriveTime; }
 int 	VehicleTrip::getTripTime()			{ return mTripTime; }
-int 	VehicleTrip::gStationCount() 		{ return mGStationCnt; }
+int 	VehicleTrip::getGStationCount() 	{ return mGStationCnt; }
 
 void VehicleTrip::runTrip(vector<TripLeg> &legs)
 {
@@ -144,45 +144,6 @@ void VehicleTrip::runTrip(vector<TripLeg> &legs)
 			<< " Total Miles = " << mCityMiles + mHighwayMiles << endl << endl;
 }
 
-void VehicleTrip::printTripDetails()
-{
-	// Calculations for centering title
-	int titleLen = mVehicle.getMake().size() + mVehicle.getModel().size() + 1;
-	int leftTitleSpace = (56 - titleLen) / 2;
-
-
-	// Calculations for formatted time
-	int days, hours, minutes, remainingTime;
-	remainingTime = mTripTime;
-	days = mTripTime / (24 * 60);
-	remainingTime = mTripTime % (24 * 60);
-	hours = remainingTime / 60;
-	minutes = remainingTime % 60;
-
-	cout << setw(leftTitleSpace) << "";
-	cout << mVehicle.getMake() << " " << mVehicle.getModel() 		   << endl;
-	cout << "--------------------------------------------------------" << endl;
-	cout << left << fixed << setprecision(2);
-	cout << "Tank Size = " << setw(6) << mVehicle.getTankSize();
-	cout << "gal   City MPG = " << setw(5) << mVehicle.getCityMPG();
-	cout << "Highway MPG = " << mVehicle.getHighwayMPG() << endl;;
-	cout << "--------------------------------------------------------" << endl;
-	cout << "Trip time(minutes) = " << setw(7) << mTripTime;
-	cout << "Trip time(d.hh:mm) = " << days << "." << setfill('0') << right
-			<< setw(2) << hours << ":" << setw(2) << minutes << endl;
-	cout << "--------------------------------------------------------" << endl;
-	cout << left << setfill(' ');
-	cout << "Trip cost based on fuel added = $" << calcGasCost(true) << endl;
-	cout << "Trip cost based on fuel used  = $" << calcGasCost(false) << endl;
-	cout << "--------------------------------------------------------" << endl;
-	cout << "Fuel added = " << setw(8) << setprecision(4)
-			<< mFuelPurchased << "gal    Fuel remaining = "
-			<< mVehicle.getTankSize() - mVehicle.getCurrentFuel()
-			<< " gal" << endl;
-	cout << "Fuel used  = " << setw(8) << mFuelConsumed;
-	cout << "gal    Fuel stops     = " << mGStationCnt << endl << endl << endl;
-}
-
 std::ostream & operator <<(std::ostream &lhs, VehicleTrip &rhs)
 {
 	std::stringstream stream;
@@ -206,99 +167,51 @@ std::ostream & operator <<(std::ostream &lhs, VehicleTrip &rhs)
 	return lhs;
 }
 
-//==============================================================================
-
-
 int VehicleTrip::calcDriveTime(double miles, TripLeg::RoadType roadType)
 {
 	int mph;
-
 	if (roadType == TripLeg::CITY) {
 		mph = mParms.getCityMph();
 	} else if (roadType == TripLeg::HIGHWAY) {
 		mph = mParms.getHighwayMph();
 	}
-
 	return (miles / mph) * 60;
 }
-
-
-//==============================================================================
-
 
 int VehicleTrip::calcRefuelTime()
 {
 	return mGStationCnt * mParms.getRefuelTime();
 }
 
-
-//==============================================================================
-
-
 int VehicleTrip::calcRestroomTime()
 {
 	return (mGStationCnt * mParms.getRestroomTime()) / 2;
 }
-
-
-//==============================================================================
-
 
 int VehicleTrip::calcSleepTime()
 {
 	int numOfNaps = mDriveTime / mParms.getAwakeTime();
 
 	// Checks to see if arrival is exactly at nap time
-	if (numOfNaps != 0 && numOfNaps % mParms.getNapTime() == 0) {
+	if (numOfNaps != 0 && numOfNaps % mParms.getNapTime() == 0)
 		numOfNaps--;
-	}
 
+	cout << "Awake Time = " << mParms.getAwakeTime() << " Number of naps = " << numOfNaps << " Nap Time = " << mParms.getNapTime() << endl;
 	return numOfNaps * mParms.getNapTime();
 }
-
-
-//==============================================================================
-
-
-double VehicleTrip::calcGasCost(bool isFuelAdded)
-{
-	double cost;
-
-	if (isFuelAdded) {
-		cost = mFuelPurchased * mParms.getFuelPrice();
-	} else {
-		cost = mFuelConsumed * mParms.getFuelPrice();
-	}
-
-	return cost;
-}
-
-
-//==============================================================================
-
 
 void VehicleTrip::increaseFuelConsumed(double miles, TripLeg::RoadType roadType)
 {
 	double gallons = mVehicle.calcFuelConsumed(miles, roadType);
-
 	mFuelConsumed += gallons;
 }
-
-
-//==============================================================================
-
 
 void VehicleTrip::increaseFuelPurchased()
 {
 	mFuelPurchased += mVehicle.getTankSize() - mVehicle.getCurrentFuel();
 }
 
-
-//==============================================================================
-
-
-double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
-								  int currLeg, double legTravelled)
+double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs, int currLeg, double legTravelled)
 {
 	double cityMiles, highwayMiles;
 	cityMiles = highwayMiles = 0;
@@ -318,7 +231,6 @@ double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
 		double tripDist = tripLegs.at(i).getDistance();
 		TripLeg::RoadType type = tripLegs.at(i).getRoadType();
 		double distance = cityMiles + highwayMiles;
-
 
 		if (distance < gasDist) {
 			// Gas station is in current trip leg
@@ -345,7 +257,6 @@ double VehicleTrip::calcFuelUntilStation(vector<TripLeg> &tripLegs,
 
 	double gallons = mVehicle.calcFuelConsumed(cityMiles, TripLeg::CITY) +
 					 mVehicle.calcFuelConsumed(highwayMiles, TripLeg::HIGHWAY);
-
 	return gallons;
 }
 

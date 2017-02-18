@@ -12,7 +12,6 @@
 
 class TripLeg
 {
-
 public:
 	enum RoadType { HIGHWAY, CITY, DEFAULT };
 
