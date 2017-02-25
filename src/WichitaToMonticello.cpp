@@ -244,7 +244,7 @@ Parameters initializeParms()
 	}
 
 	Parameters parms(cityMPH, highwayMPH, fuelPrice, refuelTime,
-					restroomTime, napTime, awakeTime * 60, gasDistance);
+					restroomTime, napTime, awakeTime, gasDistance);
 	cout << "--------------------------------------------------------" << endl;
 	cout << endl;
 	return parms;

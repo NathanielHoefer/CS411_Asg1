@@ -21,7 +21,7 @@ VehicleTrip::VehicleTrip(Vehicle &vehicle, Parameters &parms)
 	mFuelConsumed = 0.0;
 	mCityMiles = 	0;
 	mHighwayMiles = 0;
-	mDriveTime = 	0;
+	mDriveTime = 	0.0;
 	mGStationCnt = 	0;
 	mTripTime = 	0;
 }
@@ -103,7 +103,6 @@ void VehicleTrip::runTrip(std::vector<TripLeg> &legs)
 
 		// End of tripleg calculations
 		mFuelConsumed += mVehicle.calcFuelConsumed(legDistance, roadType);
-		mDriveTime += round(calcDriveTime(legDistance, roadType));
 		if (roadType == TripLeg::CITY) {
 			mCityMiles += legDistance;
 		} else if (roadType == TripLeg::HIGHWAY) {
@@ -113,10 +112,12 @@ void VehicleTrip::runTrip(std::vector<TripLeg> &legs)
 
 	// Calculate Total Time
 	int refuelTime, restroomTime, sleepTime;
+	mDriveTime += calcDriveTime(mCityMiles, TripLeg::CITY);
+	mDriveTime += calcDriveTime(mHighwayMiles, TripLeg::HIGHWAY);
 	refuelTime = round(calcRefuelTime());
 	restroomTime = round(calcRestroomTime());
 	sleepTime = round(calcSleepTime());
-	mTripTime = mDriveTime + refuelTime + restroomTime + sleepTime;
+	mTripTime = round(mDriveTime) + refuelTime + restroomTime + sleepTime;
 }
 
 std::ostream & operator <<(std::ostream &lhs, VehicleTrip &rhs)
@@ -150,7 +151,9 @@ double VehicleTrip::calcDriveTime(double miles, TripLeg::RoadType roadType)
 	} else if (roadType == TripLeg::HIGHWAY) {
 		mph = mParms.getHighwayMph();
 	}
-	return (miles / mph) * 60;
+
+	double temp = (miles / mph) * 60;
+	return temp;
 }
 
 double VehicleTrip::calcRefuelTime()

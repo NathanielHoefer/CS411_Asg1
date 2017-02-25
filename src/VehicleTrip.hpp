@@ -30,7 +30,7 @@ private:
 	double 		mFuelConsumed;
 	double 		mCityMiles;
 	double 		mHighwayMiles;
-	int 		mDriveTime;
+	double 		mDriveTime;
 	int 		mTripTime;
 	int 		mGStationCnt;
 
